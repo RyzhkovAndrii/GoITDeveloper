@@ -5,7 +5,7 @@ import goit.gojava7.ryzhkov.homework2.model.Project;
 
 import java.util.Collection;
 
-public class DBProjectDAOImpl implements ProjectDAO {
+public class MySQLProjectDAOImpl implements ProjectDAO {
 
     @Override
     public void save(Project project) {

@@ -8,11 +8,11 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-public class DBSkillDAOImpl implements SkillDAO {
+public class MySQLSkillDAOImpl implements SkillDAO {
 
     private Connection connection = null;
 
-    public DBSkillDAOImpl() {
+    public MySQLSkillDAOImpl() {
         connection = DBConnection.getInstance();
     }
 

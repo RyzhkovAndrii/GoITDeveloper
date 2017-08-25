@@ -5,7 +5,7 @@ import goit.gojava7.ryzhkov.homework2.model.Developer;
 
 import java.util.Collection;
 
-public class DBDeveloperDAOImpl implements DeveloperDAO {
+public class MySQLDeveloperDAOImpl implements DeveloperDAO {
 
     @Override
     public void save(Developer developer) {

@@ -5,7 +5,7 @@ import goit.gojava7.ryzhkov.homework2.model.Company;
 
 import java.util.Collection;
 
-public class DBCompanyDAOImpl implements CompanyDAO {
+public class MySQLCompanyDAOImpl implements CompanyDAO {
 
     @Override
     public void save(Company company) {

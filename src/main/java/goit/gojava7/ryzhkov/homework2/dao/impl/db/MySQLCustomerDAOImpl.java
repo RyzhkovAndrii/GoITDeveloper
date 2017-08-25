@@ -5,7 +5,7 @@ import goit.gojava7.ryzhkov.homework2.model.Customer;
 
 import java.util.Collection;
 
-public class DBCustomerDAOImpl implements CustomerDAO {
+public class MySQLCustomerDAOImpl implements CustomerDAO {
 
     @Override
     public void save(Customer customer) {
