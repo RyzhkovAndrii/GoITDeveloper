@@ -32,8 +32,4 @@ public class MySQLCompanyDAOImpl implements CompanyDAO {
 
     }
 
-    @Override
-    public void removeAll() {
-
-    }
 }

@@ -32,8 +32,4 @@ public class MySQLProjectDAOImpl implements ProjectDAO {
 
     }
 
-    @Override
-    public void removeAll() {
-
-    }
 }

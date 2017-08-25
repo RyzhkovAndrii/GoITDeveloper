@@ -32,8 +32,4 @@ public class MySQLDeveloperDAOImpl implements DeveloperDAO {
 
     }
 
-    @Override
-    public void removeAll() {
-
-    }
 }

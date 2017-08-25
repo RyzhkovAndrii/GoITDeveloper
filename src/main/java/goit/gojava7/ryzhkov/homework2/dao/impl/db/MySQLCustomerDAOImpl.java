@@ -32,8 +32,4 @@ public class MySQLCustomerDAOImpl implements CustomerDAO {
 
     }
 
-    @Override
-    public void removeAll() {
-
-    }
 }
