@@ -15,6 +15,4 @@ public interface GenericDAO<T, ID> {
 
     void remove(T entity) throws SQLException;
 
-    void removeAll() throws SQLException;
-
 }

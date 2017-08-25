@@ -50,7 +50,6 @@ public class Developer {
 
     @Override
     public String toString() {
-        return "Developer{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' +
-                ", skills=" + skills + '}';
+        return "Developer{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", skills=" + skills + '}';
     }
 }

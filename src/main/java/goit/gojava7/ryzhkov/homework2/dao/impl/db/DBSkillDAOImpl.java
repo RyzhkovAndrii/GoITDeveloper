@@ -72,7 +72,7 @@ public class DBSkillDAOImpl implements SkillDAO {
             pstmt.setString(1, skill.getName());
             pstmt.setInt(2, skill.getId());
             if (pstmt.executeUpdate() == 0) {
-                throw new SQLException("Updating skill failed, no rows affected.");
+                throw new SQLException("Updating skill failed, skill for update not fount.");
             }
         }
     }
@@ -83,18 +83,6 @@ public class DBSkillDAOImpl implements SkillDAO {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, skill.getId());
             if (pstmt.executeUpdate() == 0) {
-                throw new SQLException("Deleting skill failed, no rows affected.");
-            }
-        }
-    }
-
-    @Override
-    public void removeAll() throws SQLException {
-        int affectedRows;
-        String sql = "DELETE FROM skills";
-        try (Statement pstmt = connection.createStatement()) {
-            affectedRows = pstmt.executeUpdate(sql);
-            if (affectedRows == 0) {
                 throw new SQLException("Deleting skill failed, no rows affected.");
             }
         }
