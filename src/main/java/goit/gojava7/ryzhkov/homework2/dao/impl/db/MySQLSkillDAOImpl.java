@@ -16,6 +16,12 @@ public class MySQLSkillDAOImpl implements SkillDAO {
         connection = DBConnection.getInstance();
     }
 
+    public Skill getSkillFromResultSetRow(ResultSet rs) throws SQLException {
+        int id = rs.getInt("skillId");
+        String name = rs.getString("skillName");
+        return new Skill(id, name);
+    }
+
     @Override
     public void save(Skill skill) throws SQLException {
         String sql = "INSERT INTO skills(skillName) VALUES (?)";
@@ -35,14 +41,13 @@ public class MySQLSkillDAOImpl implements SkillDAO {
 
     @Override
     public Skill getById(Integer id) throws SQLException {
-        Skill skill = new Skill();
+        Skill skill;
         String sql = "SELECT * FROM skills WHERE skillId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                skill.setId(id);
-                skill.setName(rs.getString(2));
+                skill = getSkillFromResultSetRow(rs);
             } else {
                 throw new SQLException("Getting skill failed, no ID found.");
             }
@@ -57,9 +62,7 @@ public class MySQLSkillDAOImpl implements SkillDAO {
             String sql = "SELECT * FROM skills";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                int id = rs.getInt(1);
-                String name = rs.getString(2);
-                skills.add(new Skill(id, name));
+                skills.add(getSkillFromResultSetRow(rs));
             }
         }
         return skills;
