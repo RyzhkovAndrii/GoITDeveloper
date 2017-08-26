@@ -7,12 +7,15 @@ public class Developer {
     private int id;
     private String firstName;
     private String lastName;
+    private double salary;
     private Collection<Skill> skills;
 
-    public Developer(int id, String firstName, String lastName, Collection<Skill> skills) {
+    public Developer(int id, String firstName, String lastName, double salary, Collection<Skill> skills) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.salary = salary;
+
         this.skills = skills;
     }
 
@@ -38,6 +41,14 @@ public class Developer {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
     }
 
     public Collection<Skill> getSkills() {
