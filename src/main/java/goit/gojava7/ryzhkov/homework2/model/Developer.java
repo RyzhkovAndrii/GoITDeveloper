@@ -10,12 +10,14 @@ public class Developer {
     private double salary;
     private Collection<Skill> skills;
 
+    public Developer() {
+    }
+
     public Developer(int id, String firstName, String lastName, double salary, Collection<Skill> skills) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.salary = salary;
-
         this.skills = skills;
     }
 
@@ -61,6 +63,7 @@ public class Developer {
 
     @Override
     public String toString() {
-        return "Developer{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", skills=" + skills + '}';
+        return "Developer{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName
+                + '\'' + ", skills=" + skills + '}';
     }
 }
