@@ -128,7 +128,7 @@ public class MySQLDeveloperDAOImpl implements DeveloperDAO {
     @Override
     public Collection<Developer> getAll() throws SQLException {
         Collection<Developer> developers = new LinkedHashSet<>();
-        String sql = "SELECT * FROM developers WHERE developerId";
+        String sql = "SELECT * FROM developers";
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
