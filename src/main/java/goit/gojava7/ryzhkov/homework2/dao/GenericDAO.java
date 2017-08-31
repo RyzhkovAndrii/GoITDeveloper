@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public interface GenericDAO<T, ID> {
 
-    void save(T entity) throws SQLException;
+    ID save(T entity) throws SQLException;
 
     T getById(ID id) throws SQLException;
 

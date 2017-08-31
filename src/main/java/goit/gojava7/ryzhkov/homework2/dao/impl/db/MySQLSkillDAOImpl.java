@@ -23,8 +23,9 @@ public class MySQLSkillDAOImpl implements SkillDAO {
     }
 
     @Override
-    public void save(Skill skill) throws SQLException {
+    public Integer save(Skill skill) throws SQLException {
         String sql = "INSERT INTO skills(skillName) VALUES (?)";
+        int id;
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, skill.getName());
             if (pstmt.executeUpdate() == 0) {
@@ -32,11 +33,12 @@ public class MySQLSkillDAOImpl implements SkillDAO {
             }
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
-                skill.setId(generatedKeys.getInt(1));
+                id = generatedKeys.getInt(1);
             } else {
                 throw new SQLException("Saving skill failed, no ID obtained.");
             }
         }
+        return id;
     }
 
     @Override
