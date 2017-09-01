@@ -2,7 +2,7 @@ package goit.gojava7.ryzhkov.homework2.dao.factory;
 
 import goit.gojava7.ryzhkov.homework2.dao.*;
 
-interface DaoFactory {
+public interface DaoFactory {
 
     SkillDao getSkillDao();
 
