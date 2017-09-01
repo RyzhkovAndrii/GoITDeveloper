@@ -15,6 +15,11 @@ public class SkillControllerImpl implements SkillController {
     private SkillDao skillDao = daoFactory.getSkillDao();
 
     @Override
+    public Collection<Skill> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
+        return skillDao.getByCollectionId(idCollection);
+    }
+
+    @Override
     public Integer save(Skill skill) throws SQLException {
         return skillDao.save(skill);
     }

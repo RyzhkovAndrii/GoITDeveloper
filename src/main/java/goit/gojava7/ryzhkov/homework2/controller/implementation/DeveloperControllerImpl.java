@@ -25,6 +25,11 @@ public class DeveloperControllerImpl implements DeveloperController {
     }
 
     @Override
+    public Collection<Developer> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
+        return developerDao.getByCollectionId(idCollection);
+    }
+
+    @Override
     public Collection<Developer> getAll() throws SQLException {
         return developerDao.getAll();
     }

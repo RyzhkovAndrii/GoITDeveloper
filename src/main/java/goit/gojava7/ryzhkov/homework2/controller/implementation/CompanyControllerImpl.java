@@ -25,6 +25,11 @@ public class CompanyControllerImpl implements CompanyController {
     }
 
     @Override
+    public Collection<Company> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
+        return companyDao.getByCollectionId(idCollection);
+    }
+
+    @Override
     public Collection<Company> getAll() throws SQLException {
         return companyDao.getAll();
     }
