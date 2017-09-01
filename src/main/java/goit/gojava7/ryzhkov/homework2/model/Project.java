@@ -8,6 +8,14 @@ public class Project {
     private String name;
     private Collection<Developer> developers;
 
+    public Project() {
+    }
+
+    public Project(String name, Collection<Developer> developers) {
+        this.name = name;
+        this.developers = developers;
+    }
+
     public Project(int id, String name, Collection<Developer> developers) {
         this.id = id;
         this.name = name;

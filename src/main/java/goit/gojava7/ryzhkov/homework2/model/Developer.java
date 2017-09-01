@@ -13,6 +13,13 @@ public class Developer {
     public Developer() {
     }
 
+    public Developer(String firstName, String lastName, double salary, Collection<Skill> skills) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.salary = salary;
+        this.skills = skills;
+    }
+
     public Developer(int id, String firstName, String lastName, double salary, Collection<Skill> skills) {
         this.id = id;
         this.firstName = firstName;

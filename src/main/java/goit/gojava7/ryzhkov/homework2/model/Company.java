@@ -8,6 +8,14 @@ public class Company {
     private String name;
     private Collection<Project> projects;
 
+    public Company() {
+    }
+
+    public Company(String name, Collection<Project> projects) {
+        this.name = name;
+        this.projects = projects;
+    }
+
     public Company(int id, String name, Collection<Project> projects) {
         this.id = id;
         this.name = name;
