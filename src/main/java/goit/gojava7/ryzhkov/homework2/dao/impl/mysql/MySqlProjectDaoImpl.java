@@ -91,7 +91,7 @@ public class MySqlProjectDaoImpl implements ProjectDao {
     private Collection<Developer> getDevelopersByProjectId(int projectId) throws SQLException {
         MySqlDeveloperDaoImpl developerDAO = new MySqlDeveloperDaoImpl();
         Collection<Developer> developers = new HashSet<>();
-        String sql = "SELECT developer_id, developer_first_name, developer_last_name, salary" +
+        String sql = "SELECT developer_id, developer_first_name, developer_last_name, developer_salary" +
                 " FROM projects_developers pd" +
                 " JOIN developers USING (developer_id)" +
                 " WHERE pd.project_id = ?";

@@ -60,7 +60,7 @@ public class MySqlDeveloperDaoImpl implements DeveloperDao {
     }
 
     private int saveDevelopersBasicInfo(Developer developer) throws SQLException {
-        String sql = "INSERT INTO developers(developer_first_name, developer_last_name, salary) " +
+        String sql = "INSERT INTO developers(developer_first_name, developer_last_name, developer_salary) " +
                 "VALUES (?, ?, ?)";
         try (PreparedStatement pstmt =
                      connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -80,7 +80,7 @@ public class MySqlDeveloperDaoImpl implements DeveloperDao {
 
     private void updateDevelopersBasicInfo(Developer developer) throws SQLException {
         String sql = "UPDATE developers SET developer_first_name = ?," +
-                " developer_last_name = ?, salary = ? WHERE developer_id = ?";
+                " developer_last_name = ?, developer_salary = ? WHERE developer_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, developer.getFirstName());
             pstmt.setString(2, developer.getLastName());
@@ -112,7 +112,7 @@ public class MySqlDeveloperDaoImpl implements DeveloperDao {
         int id = rs.getInt("developer_id");
         String firstName = rs.getString("developer_first_name");
         String lastName = rs.getString("developer_last_name");
-        double salary = rs.getDouble("salary");
+        double salary = rs.getDouble("developer_salary");
         Collection<Skill> skills = getSkillsByDeveloperId(id);
         return new Developer(id, firstName, lastName, salary, skills);
     }
