@@ -13,4 +13,4 @@ CASE
     WHEN developer_id = 8 THEN 400.00
     WHEN developer_id = 9 THEN 1000.00
 END
-WHERE developer_id BETWEEN 1 and 9;
+WHERE developer_id BETWEEN 1 AND 9;
