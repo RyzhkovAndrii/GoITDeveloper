@@ -1,9 +1,9 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
-import goit.gojava7.ryzhkov.homework2.utils.ConnectionUtils;
 import goit.gojava7.ryzhkov.homework2.dao.DeveloperDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
+import goit.gojava7.ryzhkov.homework2.utils.ConnectionUtils;
 
 import java.sql.*;
 import java.util.Collection;
