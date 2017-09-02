@@ -85,7 +85,8 @@ public class MySqlSkillDaoImpl implements SkillDao {
             connection.setAutoCommit(false);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                skills.add(getSkillFromResultSetCurrentRow(rs));
+                Skill skill = getSkillFromResultSetCurrentRow(rs);
+                skills.add(skill);
             }
             connection.commit();
             return skills;
@@ -106,7 +107,8 @@ public class MySqlSkillDaoImpl implements SkillDao {
             connection.setAutoCommit(false);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                skills.add(getSkillFromResultSetCurrentRow(rs));
+                Skill skill = getSkillFromResultSetCurrentRow(rs);
+                skills.add(skill);
             }
             connection.commit();
             return skills;
