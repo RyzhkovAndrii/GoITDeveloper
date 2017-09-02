@@ -1,17 +1,17 @@
 package goit.gojava7.ryzhkov.homework2.view.factory;
 
-import goit.gojava7.ryzhkov.homework2.view.*;
+import goit.gojava7.ryzhkov.homework2.view.View;
 
 public interface ViewFactory {
 
-    SkillView getSkillView();
+    View getSkillView();
 
-    DeveloperView getDeveloperView();
+    View getDeveloperView();
 
-    ProjectView getProjectView();
+    View getProjectView();
 
-    CompanyView getCompanyView();
+    View getCompanyView();
 
-    CustomerView getCustomerView();
+    View getCustomerView();
 
 }

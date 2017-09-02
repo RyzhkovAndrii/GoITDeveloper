@@ -1,32 +1,32 @@
 package goit.gojava7.ryzhkov.homework2.view.factory;
 
-import goit.gojava7.ryzhkov.homework2.view.*;
+import goit.gojava7.ryzhkov.homework2.view.View;
 import goit.gojava7.ryzhkov.homework2.view.impl.console.*;
 
 public class ConsoleViewFactory implements ViewFactory {
 
     @Override
-    public SkillView getSkillView() {
+    public View getSkillView() {
         return new SkillViewConsoleImpl();
     }
 
     @Override
-    public DeveloperView getDeveloperView() {
+    public View getDeveloperView() {
         return new DeveloperViewConsoleImpl();
     }
 
     @Override
-    public ProjectView getProjectView() {
+    public View getProjectView() {
         return new ProjectViewConsoleImpl();
     }
 
     @Override
-    public CompanyView getCompanyView() {
+    public View getCompanyView() {
         return new CompanyViewConsoleImpl();
     }
 
     @Override
-    public CustomerView getCustomerView() {
+    public View getCustomerView() {
         return new CustomerViewConsoleImpl();
     }
 
