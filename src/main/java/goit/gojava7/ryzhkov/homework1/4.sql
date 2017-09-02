@@ -1,5 +1,5 @@
-#ALTER TABLE projects DROP COLUMN cost;
-ALTER TABLE projects ADD COLUMN cost DECIMAL(11,2) DEFAULT 0.00;
+#ALTER TABLE projects DROP COLUMN project_cost;
+ALTER TABLE projects ADD COLUMN project_cost DECIMAL(11,2) DEFAULT 0.00;
 UPDATE projects
 SET cost =
 CASE
