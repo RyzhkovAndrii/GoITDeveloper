@@ -18,7 +18,7 @@ public class MySqlSkillDaoImpl implements SkillDao {
         connection = ConnectionUtils.getConnection();
     }
 
-    protected Skill getSkillFromResultSetCurrentRow(ResultSet rs) throws SQLException {
+    Skill getSkillFromResultSetCurrentRow(ResultSet rs) throws SQLException {
         int id = rs.getInt("skill_id");
         String name = rs.getString("skill_name");
         return new Skill(id, name);
