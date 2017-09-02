@@ -85,6 +85,7 @@ public class MySqlDeveloperDaoImpl implements DeveloperDao {
             pstmt.setString(1, developer.getFirstName());
             pstmt.setString(2, developer.getLastName());
             pstmt.setDouble(3, developer.getSalary());
+            pstmt.setInt(4, developer.getId());
             if (pstmt.executeUpdate() == 0) {
                 throw new SQLException("Updating developer failed, developer for update not found.");
             }

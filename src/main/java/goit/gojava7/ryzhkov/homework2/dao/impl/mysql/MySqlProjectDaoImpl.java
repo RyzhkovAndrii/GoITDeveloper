@@ -79,6 +79,7 @@ public class MySqlProjectDaoImpl implements ProjectDao {
         String sql = "UPDATE projects SET project_name = ? WHERE project_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, project.getName());
+            pstmt.setInt(2, project.getId());
             if (pstmt.executeUpdate() == 0) {
                 throw new SQLException("Updating project failed, project for update not found.");
             }

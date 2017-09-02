@@ -79,6 +79,7 @@ public class MySqlCompanyDaoImpl implements CompanyDao {
         String sql = "UPDATE companies SET company_name = ? WHERE company_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, company.getName());
+            pstmt.setInt(2, company.getId());
             if (pstmt.executeUpdate() == 0) {
                 throw new SQLException("Updating company failed, project for update not found.");
             }

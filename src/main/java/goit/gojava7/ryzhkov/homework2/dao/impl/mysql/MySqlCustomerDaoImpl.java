@@ -79,6 +79,7 @@ public class MySqlCustomerDaoImpl implements CustomerDao {
         String sql = "UPDATE customers SET customer_name = ? WHERE customer_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, customer.getName());
+            pstmt.setInt(2, customer.getId());
             if (pstmt.executeUpdate() == 0) {
                 throw new SQLException("Updating customer failed, project for update not found.");
             }
