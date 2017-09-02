@@ -6,19 +6,22 @@ public class Project {
 
     private int id;
     private String name;
+    private double cost;
     private Collection<Developer> developers;
 
     public Project() {
     }
 
-    public Project(String name, Collection<Developer> developers) {
+    public Project(String name, double cost, Collection<Developer> developers) {
         this.name = name;
+        this.cost = cost;
         this.developers = developers;
     }
 
-    public Project(int id, String name, Collection<Developer> developers) {
+    public Project(int id, String name, double cost, Collection<Developer> developers) {
         this.id = id;
         this.name = name;
+        this.cost = cost;
         this.developers = developers;
     }
 
@@ -48,6 +51,6 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" + "id=" + id + ", name='" + name + '\'' + ", developers=" + developers + '}';
+        return name + "(" + id + "), dev: " + developers;
     }
 }
