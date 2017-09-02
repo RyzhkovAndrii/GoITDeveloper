@@ -41,6 +41,14 @@ public class Project {
         this.name = name;
     }
 
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
     public Collection<Developer> getDevelopers() {
         return developers;
     }
