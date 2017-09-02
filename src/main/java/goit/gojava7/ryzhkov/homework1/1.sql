@@ -1,7 +1,7 @@
-#TABLE developers DROP COLUMN salary;
-ALTER TABLE developers ADD COLUMN salary DECIMAL(9,2) DEFAULT 0.00;
+#ALTER TABLE developers DROP COLUMN developer_salary;
+ALTER TABLE developers ADD COLUMN developer_salary DECIMAL(9,2) DEFAULT 0.00;
 UPDATE developers
-SET salary = 
+SET developer_salary =
 CASE
 	WHEN developer_id = 1 THEN 1500.00
     WHEN developer_id = 2 THEN 400.00

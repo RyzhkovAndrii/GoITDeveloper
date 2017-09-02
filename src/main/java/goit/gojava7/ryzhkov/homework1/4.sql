@@ -1,7 +1,7 @@
 #ALTER TABLE projects DROP COLUMN project_cost;
 ALTER TABLE projects ADD COLUMN project_cost DECIMAL(11,2) DEFAULT 0.00;
 UPDATE projects
-SET cost =
+SET project_cost =
 CASE
 	WHEN project_id = 1 THEN 15000.00
     WHEN project_id = 2 THEN 12000.00
