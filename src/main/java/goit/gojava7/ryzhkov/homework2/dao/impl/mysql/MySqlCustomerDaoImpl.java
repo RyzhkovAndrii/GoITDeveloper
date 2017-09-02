@@ -89,7 +89,7 @@ public class MySqlCustomerDaoImpl implements CustomerDao {
     private Collection<Project> getProjectsByCustomerId(int customerId) throws SQLException {
         MySqlProjectDaoImpl projectDao = new MySqlProjectDaoImpl();
         Collection<Project> projects = new HashSet<>();
-        String sql = "SELECT project_id, project_name" +
+        String sql = "SELECT project_id, project_name, project_cost" +
                 " FROM customers_projects cp" +
                 " JOIN projects USING (project_id)" +
                 " WHERE cp.customer_id = ?";

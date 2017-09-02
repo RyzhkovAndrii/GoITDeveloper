@@ -60,10 +60,11 @@ public class MySqlProjectDaoImpl implements ProjectDao {
     }
 
     private int saveBasicInfoOfProject(Project project) throws SQLException {
-        String sql = "INSERT INTO projects(project_name) VALUES (?)";
+        String sql = "INSERT INTO projects(project_name, project_cost) VALUES (?, ?)";
         try (PreparedStatement pstmt =
                      connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, project.getName());
+            pstmt.setDouble(2, project.getCost());
             if (pstmt.executeUpdate() == 0) {
                 throw new SQLException("Saving project failed, no rows affected.");
             }
@@ -76,10 +77,11 @@ public class MySqlProjectDaoImpl implements ProjectDao {
     }
 
     private void updateBasicInfoOfProject(Project project) throws SQLException {
-        String sql = "UPDATE projects SET project_name = ? WHERE project_id = ?";
+        String sql = "UPDATE projects SET project_name = ?, project_cost = ? WHERE project_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, project.getName());
-            pstmt.setInt(2, project.getId());
+            pstmt.setDouble(2, project.getCost());
+            pstmt.setInt(3, project.getId());
             if (pstmt.executeUpdate() == 0) {
                 throw new SQLException("Updating project failed, project for update not found.");
             }
@@ -107,8 +109,9 @@ public class MySqlProjectDaoImpl implements ProjectDao {
     Project getProjectFromResultSetCurrentRow(ResultSet rs) throws SQLException {
         int id = rs.getInt("project_id");
         String name = rs.getString("project_name");
+        double cost = rs.getDouble("project_cost");
         Collection<Developer> developers = getDevelopersByProjectId(id);
-        return new Project(id, name, developers);
+        return new Project(id, name, cost, developers);
     }
 
     @Override
