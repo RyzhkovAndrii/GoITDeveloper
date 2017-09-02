@@ -92,7 +92,7 @@ public class MySqlProjectDaoImpl implements ProjectDao {
         String sql = "SELECT developer_id, developer_first_name, developer_last_name, salary" +
                 " FROM projects_developers pd" +
                 " JOIN developers USING (developer_id)" +
-                " WHERE ds.project_id = ?";
+                " WHERE pd.project_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, projectId);
             ResultSet rs = pstmt.executeQuery();
