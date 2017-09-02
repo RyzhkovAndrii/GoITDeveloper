@@ -59,6 +59,6 @@ public class Project {
 
     @Override
     public String toString() {
-        return name + "(" + id + "), dev: " + developers;
+        return name + "(" + id + "), " + cost + "$, dev: " + developers;
     }
 }
