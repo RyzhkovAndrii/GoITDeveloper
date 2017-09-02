@@ -1,31 +1,32 @@
-package goit.gojava7.ryzhkov.homework2.dao.impl.db;
+package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
-import goit.gojava7.ryzhkov.homework2.connection.DBConnection;
-import goit.gojava7.ryzhkov.homework2.dao.SkillDAO;
+import goit.gojava7.ryzhkov.homework2.dao.SkillDao;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
+import goit.gojava7.ryzhkov.homework2.utils.ConnectionUtils;
 
 import java.sql.*;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
 
-public class MySQLSkillDAOImpl implements SkillDAO {
+public class MySqlSkillDaoImpl implements SkillDao {
 
     private Connection connection;
     private boolean oldAutoCommitState;
 
-    public MySQLSkillDAOImpl() {
-        connection = DBConnection.getInstance();
+    public MySqlSkillDaoImpl() {
+        connection = ConnectionUtils.getConnection();
     }
 
     protected Skill getSkillFromResultSetCurrentRow(ResultSet rs) throws SQLException {
-        int id = rs.getInt("skillId");
-        String name = rs.getString("skillName");
+        int id = rs.getInt("skill_id");
+        String name = rs.getString("skill_name");
         return new Skill(id, name);
     }
 
     @Override
     public Integer save(Skill skill) throws SQLException {
-        String sql = "INSERT INTO skills(skillName) VALUES (?)";
+        String sql = "INSERT INTO skills(skill_name) VALUES (?)";
         int id;
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             oldAutoCommitState = connection.getAutoCommit();
@@ -51,7 +52,7 @@ public class MySQLSkillDAOImpl implements SkillDAO {
 
     @Override
     public Skill getById(Integer id) throws SQLException {
-        String sql = "SELECT * FROM skills WHERE skillId = ?";
+        String sql = "SELECT * FROM skills WHERE skill_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             oldAutoCommitState = connection.getAutoCommit();
             connection.setAutoCommit(false);
@@ -73,12 +74,36 @@ public class MySQLSkillDAOImpl implements SkillDAO {
     }
 
     @Override
-    public Collection<Skill> getAll() throws SQLException {
+    public Collection<Skill> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
+        String idRange = idCollection.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",","(",")"));
+        String sql = "SELECT * FROM skills WHERE skill_id IN " + idRange;
         Collection<Skill> skills = new LinkedHashSet<>();
         try (Statement stmt = connection.createStatement()) {
             oldAutoCommitState = connection.getAutoCommit();
             connection.setAutoCommit(false);
-            String sql = "SELECT * FROM skills";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                skills.add(getSkillFromResultSetCurrentRow(rs));
+            }
+            connection.commit();
+            return skills;
+        } catch (SQLException e) {
+            connection.rollback();
+            throw new SQLException("Transaction is being rolled back. " + e.getMessage(), e);
+        } finally {
+            connection.setAutoCommit(oldAutoCommitState);
+        }
+    }
+
+    @Override
+    public Collection<Skill> getAll() throws SQLException {
+        Collection<Skill> skills = new LinkedHashSet<>();
+        String sql = "SELECT * FROM skills";
+        try (Statement stmt = connection.createStatement()) {
+            oldAutoCommitState = connection.getAutoCommit();
+            connection.setAutoCommit(false);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 skills.add(getSkillFromResultSetCurrentRow(rs));
@@ -95,7 +120,7 @@ public class MySQLSkillDAOImpl implements SkillDAO {
 
     @Override
     public void update(Skill skill) throws SQLException {
-        String sql = "UPDATE skills SET skillName = ? WHERE skillId = ?";
+        String sql = "UPDATE skills SET skill_name = ? WHERE skill_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             oldAutoCommitState = connection.getAutoCommit();
             connection.setAutoCommit(false);
@@ -115,7 +140,7 @@ public class MySQLSkillDAOImpl implements SkillDAO {
 
     @Override
     public void remove(Skill skill) throws SQLException {
-        String sql = "DELETE FROM skills WHERE skillId = ?";
+        String sql = "DELETE FROM skills WHERE skill_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             oldAutoCommitState = connection.getAutoCommit();
             connection.setAutoCommit(false);
