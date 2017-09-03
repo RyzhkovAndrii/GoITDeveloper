@@ -70,7 +70,6 @@ public class Developer {
 
     @Override
     public String toString() {
-        return "Developer{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName
-                + '\'' + ", skills=" + skills + '}';
+        return firstName + " " + lastName + " (" + id + "), " + salary + "$, skills: " + skills;
     }
 }
