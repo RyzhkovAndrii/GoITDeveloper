@@ -153,8 +153,8 @@ public class MySqlCustomerDaoImpl implements CustomerDao {
     }
 
     @Override
-    public Collection<Customer> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        String idRange = idCollection.stream()
+    public Collection<Customer> getByIds(Collection<Integer> ids) throws SQLException {
+        String idRange = ids.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",","(",")"));
         String sql = "SELECT * FROM customers WHERE customer_id IN " + idRange;

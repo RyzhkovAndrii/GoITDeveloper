@@ -16,7 +16,7 @@ public class SkillControllerImpl implements SkillController {
 
     @Override
     public Collection<Skill> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        return skillDao.getByCollectionId(idCollection);
+        return skillDao.getByIds(idCollection);
     }
 
     @Override

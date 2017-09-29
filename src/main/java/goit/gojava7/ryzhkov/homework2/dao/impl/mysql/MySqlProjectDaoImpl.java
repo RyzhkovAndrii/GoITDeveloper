@@ -99,7 +99,7 @@ public class MySqlProjectDaoImpl implements ProjectDao {
             pstmt.setInt(1, projectId);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                Developer developer = developerDAO.getDeveloperFromResultSetCurrentRow(rs);
+                Developer developer = null; //developerDAO.getDeveloperFromResultSetCurrentRow(rs); // todo
                 developers.add(developer);
             }
         }
@@ -156,8 +156,8 @@ public class MySqlProjectDaoImpl implements ProjectDao {
     }
 
     @Override
-    public Collection<Project> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        String idRange = idCollection.stream()
+    public Collection<Project> getByIds(Collection<Integer> ids) throws SQLException {
+        String idRange = ids.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",","(",")"));
         String sql = "SELECT * FROM projects WHERE project_id IN " + idRange;

@@ -153,8 +153,8 @@ public class MySqlCompanyDaoImpl implements CompanyDao {
     }
 
     @Override
-    public Collection<Company> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        String idRange = idCollection.stream()
+    public Collection<Company> getByIds(Collection<Integer> ids) throws SQLException {
+        String idRange = ids.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",","(",")"));
         String sql = "SELECT * FROM companies WHERE company_id IN " + idRange;

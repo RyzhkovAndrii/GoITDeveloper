@@ -26,7 +26,7 @@ public class CustomerControllerImpl implements CustomerController {
 
     @Override
     public Collection<Customer> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        return customerDao.getByCollectionId(idCollection);
+        return customerDao.getByIds(idCollection);
     }
 
     @Override

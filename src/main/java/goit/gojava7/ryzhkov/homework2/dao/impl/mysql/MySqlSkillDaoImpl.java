@@ -1,162 +1,103 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
 import goit.gojava7.ryzhkov.homework2.dao.SkillDao;
+import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
-import goit.gojava7.ryzhkov.homework2.utils.ConnectionUtils;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
-public class MySqlSkillDaoImpl implements SkillDao {
+public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implements SkillDao {
 
-    private Connection connection;
-    private boolean oldAutoCommitState;
+    private static final String SQL_SAVE = "INSERT INTO skills(skill_name) VALUES (?)";
+    private static final String SQL_UPDATE = "UPDATE skills SET skill_name = ? WHERE skill_id = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM skills";
+    private static final String SQL_GET_BY_ID = "SELECT * FROM skills WHERE skill_id = ?";
+    private static final String SQL_GET_BY_ID_RANGE = "SELECT * FROM skills WHERE skill_id IN ";
+    private static final String SQL_GET_BY_DEVELOPER_ID =
+            "SELECT * FROM skills JOIN developers_skills USING (skill_id) WHERE developer_id = "; // todo
+    private static final String SQL_REMOVE_BY_ID = "DELETE FROM skills WHERE skill_id = ?";
 
     public MySqlSkillDaoImpl() {
-        connection = ConnectionUtils.getConnection();
     }
 
-    Skill getSkillFromResultSetCurrentRow(ResultSet rs) throws SQLException {
+    public Collection<Skill> getByDeveloper(Developer developer) throws SQLException {
+        return getAllWithOutTransaction(SQL_GET_BY_DEVELOPER_ID + developer.getId());
+    }
+
+    @Override
+    public Integer save(Skill skill) throws SQLException {
+        return save(skill, SQL_SAVE);
+    }
+
+    @Override
+    public Skill getById(Integer id) throws SQLException {
+        return getById(id, SQL_GET_BY_ID);
+    }
+
+    @Override
+    public Collection<Skill> getByIds(Collection<Integer> ids) throws SQLException { // todo
+        String idRange = ids.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",","(",")"));
+        return getAll(SQL_GET_BY_ID_RANGE + idRange);
+    }
+
+    @Override
+    public Collection<Skill> getAll() throws SQLException {
+        return getAll(SQL_GET_ALL);
+    }
+
+    @Override
+    public void update(Skill skill) throws SQLException {
+        update(skill, SQL_UPDATE);
+    }
+
+    @Override
+    public void remove(Skill skill) throws SQLException {
+        removeById(skill.getId(), SQL_REMOVE_BY_ID);
+    }
+
+
+    @Override
+    protected Skill readFromResultSet(ResultSet rs) throws SQLException {
         int id = rs.getInt("skill_id");
         String name = rs.getString("skill_name");
         return new Skill(id, name);
     }
 
     @Override
-    public Integer save(Skill skill) throws SQLException {
-        String sql = "INSERT INTO skills(skill_name) VALUES (?)";
-        int id;
-        try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            oldAutoCommitState = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            pstmt.setString(1, skill.getName());
-            if (pstmt.executeUpdate() == 0) {
-                throw new SQLException("Saving skill failed, no rows affected.");
-            }
-            ResultSet generatedKeys = pstmt.getGeneratedKeys();
-            if (!generatedKeys.next()) {
-                throw new SQLException("Saving skill failed, no ID obtained.");
-            }
-            id = generatedKeys.getInt(1);
-            connection.commit();
-            return id;
-        } catch (SQLException e) {
-            connection.rollback();
-            throw new SQLException("Transaction is being rolled back. " + e.getMessage(), e);
-        } finally {
-            connection.setAutoCommit(oldAutoCommitState);
-        }
+    protected void prepareToSave(Skill skill, PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, skill.getName());
     }
 
     @Override
-    public Skill getById(Integer id) throws SQLException {
-        String sql = "SELECT * FROM skills WHERE skill_id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            oldAutoCommitState = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            if (!rs.next()) {
-                throw new SQLException("Getting skill failed, no ID found.");
-            }
-            Skill skill = getSkillFromResultSetCurrentRow(rs);
-            connection.commit();
-            return skill;
-        } catch (SQLException e) {
-            connection.rollback();
-            throw new SQLException("Transaction is being rolled back. " + e.getMessage(), e);
-        } finally {
-            connection.setAutoCommit(oldAutoCommitState);
-        }
-
+    protected void prepareToUpdate(Skill skill, PreparedStatement pstmt) throws SQLException {
+        prepareToSave(skill, pstmt);
+        pstmt.setInt(2, skill.getId());
     }
 
     @Override
-    public Collection<Skill> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        String idRange = idCollection.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(",","(",")"));
-        String sql = "SELECT * FROM skills WHERE skill_id IN " + idRange;
-        Collection<Skill> skills = new LinkedHashSet<>();
-        try (Statement stmt = connection.createStatement()) {
-            oldAutoCommitState = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Skill skill = getSkillFromResultSetCurrentRow(rs);
-                skills.add(skill);
-            }
-            connection.commit();
-            return skills;
-        } catch (SQLException e) {
-            connection.rollback();
-            throw new SQLException("Transaction is being rolled back. " + e.getMessage(), e);
-        } finally {
-            connection.setAutoCommit(oldAutoCommitState);
-        }
+    protected Integer readIdFromKeyResultSet(ResultSet rs) throws SQLException {
+        return rs.getInt(1); // todo transfer to abstract method
     }
 
     @Override
-    public Collection<Skill> getAll() throws SQLException {
-        Collection<Skill> skills = new LinkedHashSet<>();
-        String sql = "SELECT * FROM skills";
-        try (Statement stmt = connection.createStatement()) {
-            oldAutoCommitState = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Skill skill = getSkillFromResultSetCurrentRow(rs);
-                skills.add(skill);
-            }
-            connection.commit();
-            return skills;
-        } catch (SQLException e) {
-            connection.rollback();
-            throw new SQLException("Transaction is being rolled back. " + e.getMessage(), e);
-        } finally {
-            connection.setAutoCommit(oldAutoCommitState);
-        }
+    protected void getLinks(Skill skill) throws SQLException {
+        // doesn't have links
     }
 
     @Override
-    public void update(Skill skill) throws SQLException {
-        String sql = "UPDATE skills SET skill_name = ? WHERE skill_id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            oldAutoCommitState = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            pstmt.setString(1, skill.getName());
-            pstmt.setInt(2, skill.getId());
-            if (pstmt.executeUpdate() == 0) {
-                throw new SQLException("Updating skill failed, skill for update not found.");
-            }
-            connection.commit();
-        } catch (SQLException e) {
-            connection.rollback();
-            throw new SQLException("Transaction is being rolled back. " + e.getMessage(), e);
-        } finally {
-            connection.setAutoCommit(oldAutoCommitState);
-        }
+    protected void saveLinks(Skill skill) throws SQLException {
+        // doesn't have links
     }
 
     @Override
-    public void remove(Skill skill) throws SQLException {
-        String sql = "DELETE FROM skills WHERE skill_id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            oldAutoCommitState = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            pstmt.setInt(1, skill.getId());
-            if (pstmt.executeUpdate() == 0) {
-                throw new SQLException("Deleting skill failed, no rows affected.");
-            }
-            connection.commit();
-        } catch (SQLException e) {
-            connection.rollback();
-            throw new SQLException("Transaction is being rolled back. " + e.getMessage(), e);
-        } finally {
-            connection.setAutoCommit(oldAutoCommitState);
-        }
+    protected void removeLinks(Skill skill) throws SQLException {
+        // doesn't have links
     }
 
 }

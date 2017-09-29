@@ -26,7 +26,7 @@ public class ProjectControllerImpl implements ProjectController {
 
     @Override
     public Collection<Project> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        return projectDao.getByCollectionId(idCollection);
+        return projectDao.getByIds(idCollection);
     }
 
     @Override
