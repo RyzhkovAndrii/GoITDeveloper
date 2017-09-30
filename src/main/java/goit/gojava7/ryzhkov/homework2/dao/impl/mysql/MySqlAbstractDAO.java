@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 public abstract class MySqlAbstractDAO<T, ID> {
 
@@ -43,6 +44,13 @@ public abstract class MySqlAbstractDAO<T, ID> {
                 throw new SQLException("Can't execute sql: " + sql + ". ", e);
             }
         });
+    }
+
+    public Collection<T> getByIdRange(Collection<ID> idRange, String sql) throws SQLException {
+        String idRangeSql = idRange.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",","(",")"));
+        return getAll(sql + idRangeSql);
     }
 
     protected Collection<T> getAll(String sql) throws SQLException {
@@ -93,6 +101,7 @@ public abstract class MySqlAbstractDAO<T, ID> {
                     throw new SQLException("Saving failed, no ID obtained.");
                 }
                 ID id = readIdFromKeyResultSet(generatedKeys);
+                saveId(id, entity);
                 saveLinks(entity);
                 return id;
             } catch (SQLException e) {
@@ -100,6 +109,8 @@ public abstract class MySqlAbstractDAO<T, ID> {
             }
         });
     }
+
+    protected abstract void saveId(ID id, T entity);
 
     protected void update(T entity, String sql) throws SQLException {
         doInTransaction(() -> {
@@ -130,5 +141,7 @@ public abstract class MySqlAbstractDAO<T, ID> {
     protected abstract void saveLinks(T entity) throws SQLException;
 
     protected abstract void removeLinks(T entity) throws SQLException;
+
+    protected abstract int getLinksCount(T entity) throws SQLException;
 
 }

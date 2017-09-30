@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implements SkillDao {
 
@@ -18,7 +17,7 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     private static final String SQL_GET_BY_ID = "SELECT * FROM skills WHERE skill_id = ?";
     private static final String SQL_GET_BY_ID_RANGE = "SELECT * FROM skills WHERE skill_id IN ";
     private static final String SQL_GET_BY_DEVELOPER_ID =
-            "SELECT * FROM skills JOIN developers_skills USING (skill_id) WHERE developer_id = "; // todo
+            "SELECT * FROM skills JOIN developers_skills USING (skill_id) WHERE developer_id = ";
     private static final String SQL_REMOVE_BY_ID = "DELETE FROM skills WHERE skill_id = ?";
 
     public MySqlSkillDaoImpl() {
@@ -39,11 +38,8 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     }
 
     @Override
-    public Collection<Skill> getByIds(Collection<Integer> ids) throws SQLException { // todo
-        String idRange = ids.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(",","(",")"));
-        return getAll(SQL_GET_BY_ID_RANGE + idRange);
+    public Collection<Skill> getByIds(Collection<Integer> idRange) throws SQLException {
+        return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
     @Override
@@ -61,6 +57,11 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
         removeById(skill.getId(), SQL_REMOVE_BY_ID);
     }
 
+
+    @Override
+    protected void saveId(Integer id, Skill skill) {
+        skill.setId(id);
+    }
 
     @Override
     protected Skill readFromResultSet(ResultSet rs) throws SQLException {
@@ -98,6 +99,12 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     @Override
     protected void removeLinks(Skill skill) throws SQLException {
         // doesn't have links
+    }
+
+    @Override
+    protected int getLinksCount(Skill entity) throws SQLException {
+        // doesn't have links
+        return 0;
     }
 
 }
