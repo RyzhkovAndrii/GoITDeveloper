@@ -110,8 +110,6 @@ public abstract class MySqlAbstractDAO<T, ID> {
         });
     }
 
-    protected abstract void saveId(ID id, T entity);
-
     protected void update(T entity, String sql) throws SQLException {
         doInTransaction(() -> {
             try (PreparedStatement pstmt = ConnectionUtils.getConnection().prepareStatement(sql)) {
@@ -135,6 +133,8 @@ public abstract class MySqlAbstractDAO<T, ID> {
     protected abstract void prepareToUpdate(T entity, PreparedStatement pstmt) throws SQLException;
 
     protected abstract ID readIdFromKeyResultSet(ResultSet rs) throws SQLException;
+
+    protected abstract void saveId(ID id, T entity);
 
     protected abstract void getLinks(T entity) throws SQLException;
 
