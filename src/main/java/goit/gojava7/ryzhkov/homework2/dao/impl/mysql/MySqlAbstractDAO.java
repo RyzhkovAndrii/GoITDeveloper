@@ -12,9 +12,9 @@ public abstract class MySqlAbstractDAO<T, ID> {
 
     private static <V> V doInTransaction(Callable<V> actions) throws SQLException {
         Connection connection = ConnectionUtils.getConnection();
+        boolean oldAutoCommitState = connection.getAutoCommit();
         connection.setAutoCommit(false);
         connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE); // todo make level choice
-        boolean oldAutoCommitState = connection.getAutoCommit();
         try {
             V result = actions.call();
             connection.commit();
@@ -46,7 +46,7 @@ public abstract class MySqlAbstractDAO<T, ID> {
         });
     }
 
-    public Collection<T> getByIdRange(Collection<ID> idRange, String sql) throws SQLException {
+    protected Collection<T> getByIdRange(Collection<ID> idRange, String sql) throws SQLException {
         String idRangeSql = idRange.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",","(",")"));
@@ -101,8 +101,7 @@ public abstract class MySqlAbstractDAO<T, ID> {
                     throw new SQLException("Saving failed, no ID obtained.");
                 }
                 ID id = readIdFromKeyResultSet(generatedKeys);
-                saveId(id, entity);
-                saveLinks(entity);
+                saveLinks(id, entity);
                 return id;
             } catch (SQLException e) {
                 throw new SQLException("Can't execute sql: " + sql + ". ", e);
@@ -110,15 +109,15 @@ public abstract class MySqlAbstractDAO<T, ID> {
         });
     }
 
-    protected void update(T entity, String sql) throws SQLException {
+    protected void update(ID id, T entity, String sql) throws SQLException {
         doInTransaction(() -> {
             try (PreparedStatement pstmt = ConnectionUtils.getConnection().prepareStatement(sql)) {
                 prepareToUpdate(entity, pstmt);
                 if (pstmt.executeUpdate() == 0) {
                     throw new SQLException("Updating failed, id for update not found.");
                 }
-                removeLinks(entity);
-                saveLinks(entity);
+                removeLinks(id);
+                saveLinks(id, entity);
                 return null;
             } catch (SQLException e) {
                 throw new SQLException("Can't execute sql: " + sql + ". ", e);
@@ -132,16 +131,14 @@ public abstract class MySqlAbstractDAO<T, ID> {
 
     protected abstract void prepareToUpdate(T entity, PreparedStatement pstmt) throws SQLException;
 
-    protected abstract ID readIdFromKeyResultSet(ResultSet rs) throws SQLException;
-
-    protected abstract void saveId(ID id, T entity);
+    protected abstract ID readIdFromKeyResultSet(ResultSet rs) throws SQLException; // todo transfer to abstract method
 
     protected abstract void getLinks(T entity) throws SQLException;
 
-    protected abstract void saveLinks(T entity) throws SQLException;
+    protected abstract void saveLinks(ID id, T entity) throws SQLException;
 
-    protected abstract void removeLinks(T entity) throws SQLException;
+    protected abstract void removeLinks(ID id) throws SQLException;
 
-    protected abstract int getLinksCount(T entity) throws SQLException;
+    protected abstract int getLinksCount(ID id) throws SQLException;
 
 }

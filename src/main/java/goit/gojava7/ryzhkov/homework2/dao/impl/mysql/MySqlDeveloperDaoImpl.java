@@ -59,7 +59,7 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
 
     @Override
     public void update(Developer developer) throws SQLException {
-        update(developer, SQL_UPDATE);
+        update(developer.getId(), developer, SQL_UPDATE);
     }
 
     @Override
@@ -70,11 +70,6 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
     @Override
     public Collection<Developer> getByProject(Project project) throws SQLException {
         return getAllWithOutTransaction(SQL_GET_BY_PROJECT_ID + project.getId());
-    }
-
-    @Override
-    protected void saveId(Integer id, Developer developer) {
-        developer.setId(id);
     }
 
     @Override
@@ -106,15 +101,14 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
 
     @Override
     protected void getLinks(Developer developer) throws SQLException {
-        Collection<Skill> skills = new MySqlSkillDaoImpl().getByDeveloper(developer);
-        developer.setSkills(skills);
+        developer.setSkills(new MySqlSkillDaoImpl().getByDeveloper(developer));
     }
 
     @Override
-    protected void saveLinks(Developer developer) throws SQLException {
+    protected void saveLinks(Integer id, Developer developer) throws SQLException {
         try (PreparedStatement pstmt =
                      ConnectionUtils.getConnection().prepareStatement(SQL_SAVE_LINKS_SKILLS)) {
-            pstmt.setInt(1, developer.getId());
+            pstmt.setInt(1, id);
             for (Skill skill : developer.getSkills()) {
                 pstmt.setInt(2, skill.getId());
                 if (pstmt.executeUpdate() == 0) {
@@ -125,11 +119,11 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
     }
 
     @Override
-    protected void removeLinks(Developer developer) throws SQLException {
-        int skillsCount = getLinksCount(developer);
+    protected void removeLinks(Integer id) throws SQLException {
+        int skillsCount = getLinksCount(id);
         Connection connection = ConnectionUtils.getConnection();
         try (PreparedStatement pstmt = connection.prepareStatement(SQL_DELETE_LINKS_SKILLS)) {
-            pstmt.setInt(1, developer.getId());
+            pstmt.setInt(1, id);
             if (pstmt.executeUpdate() != skillsCount) {
                 throw new SQLException("Deleting links failed.");
             }
@@ -137,10 +131,10 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
     }
 
     @Override
-    protected int getLinksCount(Developer developer) throws SQLException {
+    protected int getLinksCount(Integer id) throws SQLException {
         try (PreparedStatement pstmt =
                      ConnectionUtils.getConnection().prepareStatement(SQL_GET_COUNT_LINKS_SKILLS)) {
-            pstmt.setInt(1, developer.getId());
+            pstmt.setInt(1, id);
             ResultSet resultSet = pstmt.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);

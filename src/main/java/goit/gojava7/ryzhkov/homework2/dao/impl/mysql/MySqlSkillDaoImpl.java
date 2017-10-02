@@ -23,6 +23,7 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     public MySqlSkillDaoImpl() {
     }
 
+    @Override
     public Collection<Skill> getByDeveloper(Developer developer) throws SQLException {
         return getAllWithOutTransaction(SQL_GET_BY_DEVELOPER_ID + developer.getId());
     }
@@ -49,7 +50,7 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
 
     @Override
     public void update(Skill skill) throws SQLException {
-        update(skill, SQL_UPDATE);
+        update(skill.getId(), skill, SQL_UPDATE);
     }
 
     @Override
@@ -57,11 +58,6 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
         removeById(skill.getId(), SQL_REMOVE_BY_ID);
     }
 
-
-    @Override
-    protected void saveId(Integer id, Skill skill) {
-        skill.setId(id);
-    }
 
     @Override
     protected Skill readFromResultSet(ResultSet rs) throws SQLException {
@@ -83,7 +79,7 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
 
     @Override
     protected Integer readIdFromKeyResultSet(ResultSet rs) throws SQLException {
-        return rs.getInt(1); // todo transfer to abstract method
+        return rs.getInt(1);
     }
 
     @Override
@@ -92,17 +88,17 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     }
 
     @Override
-    protected void saveLinks(Skill skill) throws SQLException {
+    protected void saveLinks(Integer id, Skill skill) throws SQLException {
         // doesn't have links
     }
 
     @Override
-    protected void removeLinks(Skill skill) throws SQLException {
+    protected void removeLinks(Integer id) throws SQLException {
         // doesn't have links
     }
 
     @Override
-    protected int getLinksCount(Skill entity) throws SQLException {
+    protected int getLinksCount(Integer id) throws SQLException {
         // doesn't have links
         return 0;
     }
