@@ -24,11 +24,6 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     }
 
     @Override
-    public Collection<Skill> getByDeveloper(Developer developer) throws SQLException {
-        return getAllWithOutTransaction(SQL_GET_BY_DEVELOPER_ID + developer.getId());
-    }
-
-    @Override
     public Integer save(Skill skill) throws SQLException {
         return save(skill, SQL_SAVE);
     }
@@ -39,7 +34,7 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     }
 
     @Override
-    public Collection<Skill> getByIds(Collection<Integer> idRange) throws SQLException {
+    public Collection<Skill> getByIdRange(Collection<Integer> idRange) throws SQLException {
         return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
@@ -58,6 +53,10 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
         removeById(skill.getId(), SQL_REMOVE_BY_ID);
     }
 
+    @Override
+    public Collection<Skill> getByDeveloper(Developer developer) throws SQLException {
+        return getAllWithOutCommit(SQL_GET_BY_DEVELOPER_ID + developer.getId());
+    }
 
     @Override
     protected Skill readFromResultSet(ResultSet rs) throws SQLException {
@@ -83,24 +82,18 @@ public class MySqlSkillDaoImpl extends MySqlAbstractDAO<Skill, Integer> implemen
     }
 
     @Override
-    protected void getLinks(Skill skill) throws SQLException {
+    protected void enrichWithLinks(Skill skill) throws SQLException {
         // doesn't have links
     }
 
     @Override
-    protected void saveLinks(Integer id, Skill skill) throws SQLException {
+    protected void saveLinksInDb(Integer id, Skill skill) throws SQLException {
         // doesn't have links
     }
 
     @Override
-    protected void removeLinks(Integer id) throws SQLException {
+    protected void removeLinksFromDb(Integer id) throws SQLException {
         // doesn't have links
-    }
-
-    @Override
-    protected int getLinksCount(Integer id) throws SQLException {
-        // doesn't have links
-        return 0;
     }
 
 }

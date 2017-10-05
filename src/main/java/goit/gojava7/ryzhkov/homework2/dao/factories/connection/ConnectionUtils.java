@@ -1,4 +1,4 @@
-package goit.gojava7.ryzhkov.homework2.utils;
+package goit.gojava7.ryzhkov.homework2.dao.factories.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,9 +19,9 @@ public class ConnectionUtils {
     public static Connection getConnection() {
         if (connection == null) {
             try {
-                connection = DriverManager.getConnection(DATABASE_URL, USER, PASSWORD);
+                connection = DriverManager.getConnection(DATABASE_URL, USER, PASSWORD); // todo add connectionFactory
             } catch (SQLException e) {
-                e.printStackTrace();
+                e.printStackTrace(); //todo print some message
             }
         }
         return connection;

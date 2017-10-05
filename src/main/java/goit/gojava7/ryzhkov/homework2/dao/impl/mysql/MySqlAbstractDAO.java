@@ -1,6 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
-import goit.gojava7.ryzhkov.homework2.utils.ConnectionUtils;
+import goit.gojava7.ryzhkov.homework2.dao.factories.connection.ConnectionUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,8 +10,13 @@ import java.util.stream.Collectors;
 
 public abstract class MySqlAbstractDAO<T, ID> {
 
-    private static <V> V doInTransaction(Callable<V> actions) throws SQLException {
-        Connection connection = ConnectionUtils.getConnection();
+    private Connection connection;
+
+    protected MySqlAbstractDAO() {
+        connection = ConnectionUtils.getConnection();
+    }
+
+    private <V> V doInTransaction(Callable<V> actions) throws SQLException {
         boolean oldAutoCommitState = connection.getAutoCommit();
         connection.setAutoCommit(false);
         connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE); // todo make level choice
@@ -29,13 +34,13 @@ public abstract class MySqlAbstractDAO<T, ID> {
 
     protected T getById(ID id, String sql) throws SQLException {
         return doInTransaction(() -> {
-            T entity;
-            try (PreparedStatement pstmt = ConnectionUtils.getConnection().prepareStatement(sql)) {
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                T entity;
                 pstmt.setObject(1, id);
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
                     entity = readFromResultSet(rs);
-                    getLinks(entity);
+                    enrichWithLinks(entity);
                 } else {
                     throw new SQLException("Getting failed, no ID found.");
                 }
@@ -54,18 +59,17 @@ public abstract class MySqlAbstractDAO<T, ID> {
     }
 
     protected Collection<T> getAll(String sql) throws SQLException {
-        return doInTransaction(() -> getAllWithOutTransaction(sql));
+        return doInTransaction(() -> getAllWithOutCommit(sql));
     }
 
-    protected Collection<T> getAllWithOutTransaction(String sql)
+    protected Collection<T> getAllWithOutCommit(String sql)
             throws SQLException {
-        ConnectionUtils.getConnection().setAutoCommit(false);
-        try (Statement stmt = ConnectionUtils.getConnection().createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
             Collection<T> entityCollection = new ArrayList<>();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 T entity = readFromResultSet(rs);
-                getLinks(entity);
+                enrichWithLinks(entity);
                 entityCollection.add(entity);
             }
             return entityCollection;
@@ -76,7 +80,7 @@ public abstract class MySqlAbstractDAO<T, ID> {
 
     protected void removeById(ID id, String sql) throws SQLException {
         doInTransaction(() -> {
-            try (PreparedStatement pstmt = ConnectionUtils.getConnection().prepareStatement(sql)) {
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setObject(1, id);
                 if (pstmt.executeUpdate() == 0) {
                     throw new SQLException("Deleting failed, no rows affected.");
@@ -91,7 +95,7 @@ public abstract class MySqlAbstractDAO<T, ID> {
     protected ID save(T entity, String sql) throws SQLException {
         return doInTransaction(() -> {
             try (PreparedStatement pstmt =
-                         ConnectionUtils.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                         connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 prepareToSave(entity, pstmt);
                 if (pstmt.executeUpdate() == 0) {
                     throw new SQLException("Saving failed, no rows affected.");
@@ -101,7 +105,7 @@ public abstract class MySqlAbstractDAO<T, ID> {
                     throw new SQLException("Saving failed, no ID obtained.");
                 }
                 ID id = readIdFromKeyResultSet(generatedKeys);
-                saveLinks(id, entity);
+                saveLinksInDb(id, entity);
                 return id;
             } catch (SQLException e) {
                 throw new SQLException("Can't execute sql: " + sql + ". ", e);
@@ -111,18 +115,49 @@ public abstract class MySqlAbstractDAO<T, ID> {
 
     protected void update(ID id, T entity, String sql) throws SQLException {
         doInTransaction(() -> {
-            try (PreparedStatement pstmt = ConnectionUtils.getConnection().prepareStatement(sql)) {
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 prepareToUpdate(entity, pstmt);
                 if (pstmt.executeUpdate() == 0) {
                     throw new SQLException("Updating failed, id for update not found.");
                 }
-                removeLinks(id);
-                saveLinks(id, entity);
+                removeLinksFromDb(id);
+                saveLinksInDb(id, entity);
                 return null;
             } catch (SQLException e) {
                 throw new SQLException("Can't execute sql: " + sql + ". ", e);
             }
         });
+    }
+
+    protected void saveLinksInDb(ID entityId, Collection linksIds, String sql) throws SQLException {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setObject(1, entityId);
+            for (Object linkId: linksIds) {
+                pstmt.setObject(2, linkId);
+                if (pstmt.executeUpdate() == 0) {
+                    throw new SQLException("Saving links failed.");
+                }
+            }
+        }
+    }
+
+    protected void removeLinksFromDb(ID id, String sqlGetLinksCount, String sqlRemove) throws SQLException {
+        int linksCount = getLinksCount(id, sqlGetLinksCount);
+        try (PreparedStatement pstmt = connection.prepareStatement(sqlRemove)) {
+            pstmt.setObject(1, id);
+            if (pstmt.executeUpdate() != linksCount) {
+                throw new SQLException("Deleting links failed.");
+            }
+        }
+    }
+
+    private int getLinksCount(ID id, String sql) throws SQLException {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setObject(1, id);
+            ResultSet resultSet = pstmt.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        }
     }
 
     protected abstract T readFromResultSet(ResultSet rs) throws SQLException;
@@ -133,12 +168,11 @@ public abstract class MySqlAbstractDAO<T, ID> {
 
     protected abstract ID readIdFromKeyResultSet(ResultSet rs) throws SQLException; // todo transfer to abstract method
 
-    protected abstract void getLinks(T entity) throws SQLException;
+    protected abstract void enrichWithLinks(T entity) throws SQLException;
 
-    protected abstract void saveLinks(ID id, T entity) throws SQLException;
+    protected abstract void saveLinksInDb(ID id, T entity) throws SQLException;
 
-    protected abstract void removeLinks(ID id) throws SQLException;
-
-    protected abstract int getLinksCount(ID id) throws SQLException;
+    protected abstract void removeLinksFromDb(ID id) throws SQLException;
 
 }
+

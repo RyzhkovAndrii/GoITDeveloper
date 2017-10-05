@@ -2,8 +2,8 @@ package goit.gojava7.ryzhkov.homework2.controller.implementation;
 
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.SkillController;
 import goit.gojava7.ryzhkov.homework2.dao.SkillDao;
-import goit.gojava7.ryzhkov.homework2.dao.factory.DaoFactory;
-import goit.gojava7.ryzhkov.homework2.dao.factory.MySqlDaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.MySqlDaoFactory;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
 
 import java.sql.SQLException;
@@ -16,7 +16,7 @@ public class SkillControllerImpl implements SkillController {
 
     @Override
     public Collection<Skill> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        return skillDao.getByIds(idCollection);
+        return skillDao.getByIdRange(idCollection);
     }
 
     @Override

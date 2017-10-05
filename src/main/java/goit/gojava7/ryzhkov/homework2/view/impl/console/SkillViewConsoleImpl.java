@@ -3,7 +3,6 @@ package goit.gojava7.ryzhkov.homework2.view.impl.console;
 import goit.gojava7.ryzhkov.homework2.controller.implementation.SkillControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.SkillController;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
-import goit.gojava7.ryzhkov.homework2.utils.ConsoleUtils;
 import goit.gojava7.ryzhkov.homework2.view.View;
 
 import java.sql.SQLException;

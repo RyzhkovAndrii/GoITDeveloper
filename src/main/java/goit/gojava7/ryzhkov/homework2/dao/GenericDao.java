@@ -9,7 +9,7 @@ public interface GenericDao<T, ID> {
 
     T getById(ID id) throws SQLException;
 
-    Collection<T> getByIds(Collection<ID> ids) throws SQLException;
+    Collection<T> getByIdRange(Collection<ID> ids) throws SQLException;
 
     Collection<T> getAll() throws SQLException;
 

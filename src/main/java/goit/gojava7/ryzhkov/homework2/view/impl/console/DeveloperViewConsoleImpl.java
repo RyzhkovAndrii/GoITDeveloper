@@ -5,7 +5,6 @@ import goit.gojava7.ryzhkov.homework2.controller.implementation.SkillControllerI
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.DeveloperController;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
-import goit.gojava7.ryzhkov.homework2.utils.ConsoleUtils;
 import goit.gojava7.ryzhkov.homework2.view.View;
 
 import java.sql.SQLException;

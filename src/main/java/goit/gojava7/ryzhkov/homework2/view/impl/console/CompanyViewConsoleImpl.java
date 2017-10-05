@@ -5,7 +5,6 @@ import goit.gojava7.ryzhkov.homework2.controller.implementation.ProjectControlle
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.CompanyController;
 import goit.gojava7.ryzhkov.homework2.model.Company;
 import goit.gojava7.ryzhkov.homework2.model.Project;
-import goit.gojava7.ryzhkov.homework2.utils.ConsoleUtils;
 import goit.gojava7.ryzhkov.homework2.view.View;
 
 import java.sql.SQLException;

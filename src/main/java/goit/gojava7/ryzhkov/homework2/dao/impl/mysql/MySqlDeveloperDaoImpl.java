@@ -4,13 +4,12 @@ import goit.gojava7.ryzhkov.homework2.dao.DeveloperDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
-import goit.gojava7.ryzhkov.homework2.utils.ConnectionUtils;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> implements DeveloperDao {
 
@@ -23,10 +22,10 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
     private static final String SQL_GET_BY_ID = "SELECT * FROM developers WHERE developer_id = ?";
     private static final String SQL_GET_BY_ID_RANGE = "SELECT * FROM developers WHERE developer_id IN ";
     private static final String SQL_GET_BY_PROJECT_ID =
-                    "SELECT developer_id, developer_first_name, developer_last_name, developer_salary" +
-                    " FROM projects_developers pd" +
-                    " JOIN developers USING (developer_id)" +
-                    " WHERE pd.project_id = ?";
+                    "SELECT developer_id, developer_first_name, developer_last_name, developer_salary " +
+                    "FROM projects_developers pd " +
+                    "JOIN developers USING (developer_id) " +
+                    "WHERE pd.project_id = ";
     private static final String SQL_REMOVE_BY_ID = "DELETE FROM developers WHERE developer_id = ?";
     private static final String SQL_SAVE_LINKS_SKILLS =
             "INSERT INTO developers_skills(developer_id, skill_id) VALUES (?, ?)";
@@ -48,7 +47,7 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
     }
 
     @Override
-    public Collection<Developer> getByIds(Collection<Integer> idRange) throws SQLException {
+    public Collection<Developer> getByIdRange(Collection<Integer> idRange) throws SQLException {
         return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
@@ -69,7 +68,7 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
 
     @Override
     public Collection<Developer> getByProject(Project project) throws SQLException {
-        return getAllWithOutTransaction(SQL_GET_BY_PROJECT_ID + project.getId());
+        return getAllWithOutCommit(SQL_GET_BY_PROJECT_ID + project.getId());
     }
 
     @Override
@@ -100,44 +99,21 @@ public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> 
     }
 
     @Override
-    protected void getLinks(Developer developer) throws SQLException {
+    protected void enrichWithLinks(Developer developer) throws SQLException {
         developer.setSkills(new MySqlSkillDaoImpl().getByDeveloper(developer));
     }
 
     @Override
-    protected void saveLinks(Integer id, Developer developer) throws SQLException {
-        try (PreparedStatement pstmt =
-                     ConnectionUtils.getConnection().prepareStatement(SQL_SAVE_LINKS_SKILLS)) {
-            pstmt.setInt(1, id);
-            for (Skill skill : developer.getSkills()) {
-                pstmt.setInt(2, skill.getId());
-                if (pstmt.executeUpdate() == 0) {
-                    throw new SQLException("Saving links failed.");
-                }
-            }
-        }
+    protected void saveLinksInDb(Integer id, Developer developer) throws SQLException {
+        Collection skillsIds = developer.getSkills().stream()
+                .map(Skill::getId)
+                .collect(Collectors.toSet());
+        saveLinksInDb(id, skillsIds, SQL_SAVE_LINKS_SKILLS);
     }
 
     @Override
-    protected void removeLinks(Integer id) throws SQLException {
-        int skillsCount = getLinksCount(id);
-        Connection connection = ConnectionUtils.getConnection();
-        try (PreparedStatement pstmt = connection.prepareStatement(SQL_DELETE_LINKS_SKILLS)) {
-            pstmt.setInt(1, id);
-            if (pstmt.executeUpdate() != skillsCount) {
-                throw new SQLException("Deleting links failed.");
-            }
-        }
+    protected void removeLinksFromDb(Integer id) throws SQLException {
+        removeLinksFromDb(id, SQL_GET_COUNT_LINKS_SKILLS, SQL_DELETE_LINKS_SKILLS);
     }
 
-    @Override
-    protected int getLinksCount(Integer id) throws SQLException {
-        try (PreparedStatement pstmt =
-                     ConnectionUtils.getConnection().prepareStatement(SQL_GET_COUNT_LINKS_SKILLS)) {
-            pstmt.setInt(1, id);
-            ResultSet resultSet = pstmt.executeQuery();
-            resultSet.next();
-            return resultSet.getInt(1);
-        }
-    }
 }

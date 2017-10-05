@@ -1,4 +1,4 @@
-package goit.gojava7.ryzhkov.homework2.utils;
+package goit.gojava7.ryzhkov.homework2.view.impl.console;
 
 import java.io.BufferedReader;
 import java.io.IOException;

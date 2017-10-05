@@ -2,8 +2,8 @@ package goit.gojava7.ryzhkov.homework2.controller.implementation;
 
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.CompanyController;
 import goit.gojava7.ryzhkov.homework2.dao.CompanyDao;
-import goit.gojava7.ryzhkov.homework2.dao.factory.DaoFactory;
-import goit.gojava7.ryzhkov.homework2.dao.factory.MySqlDaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.MySqlDaoFactory;
 import goit.gojava7.ryzhkov.homework2.model.Company;
 
 import java.sql.SQLException;
@@ -26,7 +26,7 @@ public class CompanyControllerImpl implements CompanyController {
 
     @Override
     public Collection<Company> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        return companyDao.getByIds(idCollection);
+        return companyDao.getByIdRange(idCollection);
     }
 
     @Override

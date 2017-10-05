@@ -1,6 +1,7 @@
 package goit.gojava7.ryzhkov.homework2.model;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class Company {
 
@@ -48,6 +49,9 @@ public class Company {
 
     @Override
     public String toString() {
-        return name + " (" + id + "), projects:" + projects;
+        return name + " (" + id + "), projects:" +
+                projects.stream()
+                        .map(Project::getName)
+                        .collect(Collectors.toList());
     }
 }
