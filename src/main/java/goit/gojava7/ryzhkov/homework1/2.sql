@@ -8,7 +8,7 @@ HAVING project_expenses = (
 	FROM (
 		SELECT SUM(dev.developer_salary) project_expenses
 		FROM projects_developers pd
-		NATURAL JOIN developers dev 
+		JOIN developers dev USING (developer_id)
 		GROUP BY pd.project_id
 	) sel
 )
