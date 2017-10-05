@@ -175,4 +175,3 @@ public abstract class DbAbstractDao<T, ID> {
     protected abstract void removeLinksFromDb(ID id) throws SQLException;
 
 }
-
