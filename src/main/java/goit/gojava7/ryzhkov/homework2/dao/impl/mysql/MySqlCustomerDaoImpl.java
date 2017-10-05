@@ -1,6 +1,7 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
 import goit.gojava7.ryzhkov.homework2.dao.CustomerDao;
+import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
 import goit.gojava7.ryzhkov.homework2.model.Customer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlCustomerDaoImpl extends MySqlAbstractDAO<Customer, Integer> implements CustomerDao {
+public class MySqlCustomerDaoImpl extends DbAbstractDao<Customer, Integer> implements CustomerDao {
 
     private static final String SQL_SAVE = "INSERT INTO customers(customer_name) VALUES (?)";
     private static final String SQL_UPDATE = "UPDATE customers SET customer_name = ? WHERE customer_id = ?";

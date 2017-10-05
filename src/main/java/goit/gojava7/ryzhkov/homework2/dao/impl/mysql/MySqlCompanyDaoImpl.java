@@ -1,6 +1,7 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
 import goit.gojava7.ryzhkov.homework2.dao.CompanyDao;
+import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
 import goit.gojava7.ryzhkov.homework2.model.Company;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlCompanyDaoImpl extends MySqlAbstractDAO<Company, Integer> implements CompanyDao {
+public class MySqlCompanyDaoImpl extends DbAbstractDao<Company, Integer> implements CompanyDao {
 
     private static final String SQL_SAVE = "INSERT INTO companies(company_name) VALUES (?)";
     private static final String SQL_UPDATE = "UPDATE companies SET company_name = ? WHERE company_id = ?";

@@ -1,6 +1,7 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
 import goit.gojava7.ryzhkov.homework2.dao.DeveloperDao;
+import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlDeveloperDaoImpl extends MySqlAbstractDAO<Developer, Integer> implements DeveloperDao {
+public class MySqlDeveloperDaoImpl extends DbAbstractDao<Developer, Integer> implements DeveloperDao {
 
     private static final String SQL_SAVE =
             "INSERT INTO developers(developer_first_name, developer_last_name, developer_salary) " +

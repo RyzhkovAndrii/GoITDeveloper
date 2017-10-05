@@ -1,6 +1,7 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
 
 import goit.gojava7.ryzhkov.homework2.dao.ProjectDao;
+import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
 import goit.gojava7.ryzhkov.homework2.model.Company;
 import goit.gojava7.ryzhkov.homework2.model.Customer;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
@@ -12,7 +13,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlProjectDaoImpl extends MySqlAbstractDAO<Project, Integer> implements ProjectDao {
+public class MySqlProjectDaoImpl extends DbAbstractDao<Project, Integer> implements ProjectDao {
 
     private static final String SQL_SAVE =
             "INSERT INTO projects(project_name, project_cost) VALUES (?, ?)";
