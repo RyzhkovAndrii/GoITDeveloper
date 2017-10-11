@@ -1,13 +1,30 @@
 package goit.gojava7.ryzhkov.homework2.model;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import static javax.persistence.CascadeType.*;
+
+@Entity
+@Table(name = "projects")
 public class Project {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "project_id")
     private int id;
+
+    @Column(name = "project_name", length = 50, nullable = false)
     private String name;
+
+    @Column(name = "project_cost")
     private double cost;
+
+    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
+    @JoinTable(name = "projects_developers",
+            joinColumns = @JoinColumn(name = "project_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "developer_id", nullable = false))
     private Collection<Developer> developers;
 
     public Project() {
