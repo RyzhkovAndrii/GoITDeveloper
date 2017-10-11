@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="con">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">
+            jdbc:mysql://localhost:3306/homework1?
+            useSSL=false&amp;
+            useJDBCCompliantTimezoneShift=true&amp;
+            useLegacyDatetimeCode=false&amp;
+            serverTimezone=UTC
+        </property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">root</property>
+
+        <mapping class="goit.gojava7.ryzhkov.homework2.model.Skill" />
+        <mapping class="goit.gojava7.ryzhkov.homework2.model.Developer" />
+        <mapping class="goit.gojava7.ryzhkov.homework2.model.Project" />
+        <mapping class="goit.gojava7.ryzhkov.homework2.model.Company" />
+        <mapping class="goit.gojava7.ryzhkov.homework2.model.Customer" />
+
+    </session-factory>
+</hibernate-configuration>
