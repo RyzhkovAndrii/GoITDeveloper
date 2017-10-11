@@ -1,7 +1,6 @@
-package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
+package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
-import goit.gojava7.ryzhkov.homework2.dao.SkillDao;
-import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.SkillDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
 
@@ -10,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-public class MySqlSkillDaoImpl extends DbAbstractDao<Skill, Integer> implements SkillDao {
+public class JdbcSkillDaoImpl extends JdbcAbstractDao<Skill, Integer> implements SkillDao {
 
     private static final String SQL_SAVE = "INSERT INTO skills(skill_name) VALUES (?)";
     private static final String SQL_UPDATE = "UPDATE skills SET skill_name = ? WHERE skill_id = ?";
@@ -21,7 +20,11 @@ public class MySqlSkillDaoImpl extends DbAbstractDao<Skill, Integer> implements 
             "SELECT * FROM skills JOIN developers_skills USING (skill_id) WHERE developer_id = ";
     private static final String SQL_REMOVE_BY_ID = "DELETE FROM skills WHERE skill_id = ?";
 
-    public MySqlSkillDaoImpl() {
+    public JdbcSkillDaoImpl() {
+    }
+
+    Collection<Skill> getByDeveloper(Developer developer) throws SQLException {
+        return getAllWithOutCommit(SQL_GET_BY_DEVELOPER_ID + developer.getId());
     }
 
     @Override
@@ -52,11 +55,6 @@ public class MySqlSkillDaoImpl extends DbAbstractDao<Skill, Integer> implements 
     @Override
     public void remove(Skill skill) throws SQLException {
         removeById(skill.getId(), SQL_REMOVE_BY_ID);
-    }
-
-    @Override
-    public Collection<Skill> getByDeveloper(Developer developer) throws SQLException {
-        return getAllWithOutCommit(SQL_GET_BY_DEVELOPER_ID + developer.getId());
     }
 
     @Override

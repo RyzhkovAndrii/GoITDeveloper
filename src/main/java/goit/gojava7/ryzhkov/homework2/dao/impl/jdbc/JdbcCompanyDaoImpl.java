@@ -1,7 +1,6 @@
-package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
+package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
-import goit.gojava7.ryzhkov.homework2.dao.CompanyDao;
-import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.CompanyDao;
 import goit.gojava7.ryzhkov.homework2.model.Company;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 
@@ -11,13 +10,12 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlCompanyDaoImpl extends DbAbstractDao<Company, Integer> implements CompanyDao {
+public class JdbcCompanyDaoImpl extends JdbcAbstractDao<Company, Integer> implements CompanyDao {
 
     private static final String SQL_SAVE = "INSERT INTO companies(company_name) VALUES (?)";
     private static final String SQL_UPDATE = "UPDATE companies SET company_name = ? WHERE company_id = ?";
     private static final String SQL_GET_ALL = "SELECT * FROM companies";
     private static final String SQL_GET_BY_ID = "SELECT * FROM companies WHERE company_id = ?";
-    private static final String SQL_GET_BY_ID_RANGE = "SELECT * FROM companies WHERE company_id IN ";
     private static final String SQL_REMOVE_BY_ID = "DELETE FROM companies WHERE company_id = ?";
     private static final String SQL_SAVE_LINKS_PROJECTS =
             "INSERT INTO companies_projects(company_id, project_id) VALUES (?, ?)";
@@ -34,11 +32,6 @@ public class MySqlCompanyDaoImpl extends DbAbstractDao<Company, Integer> impleme
     @Override
     public Company getById(Integer id) throws SQLException {
         return getById(id, SQL_GET_BY_ID);
-    }
-
-    @Override
-    public Collection<Company> getByIdRange(Collection<Integer> idRange) throws SQLException {
-        return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
     @Override
@@ -81,7 +74,7 @@ public class MySqlCompanyDaoImpl extends DbAbstractDao<Company, Integer> impleme
 
     @Override
     protected void enrichWithLinks(Company company) throws SQLException {
-        company.setProjects(new MySqlProjectDaoImpl().getByCompany(company));
+        company.setProjects(new JdbcProjectDaoImpl().getByCompany(company));
     }
 
     @Override

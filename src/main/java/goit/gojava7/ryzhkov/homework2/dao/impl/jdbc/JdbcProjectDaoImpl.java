@@ -1,11 +1,7 @@
-package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
+package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
-import goit.gojava7.ryzhkov.homework2.dao.ProjectDao;
-import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
-import goit.gojava7.ryzhkov.homework2.model.Company;
-import goit.gojava7.ryzhkov.homework2.model.Customer;
-import goit.gojava7.ryzhkov.homework2.model.Developer;
-import goit.gojava7.ryzhkov.homework2.model.Project;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.ProjectDao;
+import goit.gojava7.ryzhkov.homework2.model.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlProjectDaoImpl extends DbAbstractDao<Project, Integer> implements ProjectDao {
+public class JdbcProjectDaoImpl extends JdbcAbstractDao<Project, Integer> implements ProjectDao {
 
     private static final String SQL_SAVE =
             "INSERT INTO projects(project_name, project_cost) VALUES (?, ?)";
@@ -39,6 +35,14 @@ public class MySqlProjectDaoImpl extends DbAbstractDao<Project, Integer> impleme
             "SELECT COUNT(project_id) FROM projects_developers WHERE project_id = ?";
     private static final String SQL_DELETE_LINKS_DEVELOPERS =
             "DELETE FROM projects_developers WHERE project_id = ?";
+
+    Collection<Project> getByCompany(Company company) throws SQLException {
+        return getAllWithOutCommit(SQL_GET_BY_COMPANY_ID + company.getId());
+    }
+
+    Collection<Project> getByCustomer(Customer customer) throws SQLException {
+        return getAllWithOutCommit(SQL_GET_BY_CUSTOMER_ID + customer.getId());
+    }
 
     @Override
     public Integer save(Project project) throws SQLException {
@@ -71,16 +75,6 @@ public class MySqlProjectDaoImpl extends DbAbstractDao<Project, Integer> impleme
     }
 
     @Override
-    public Collection<Project> getByCompany(Company company) throws SQLException {
-        return getAllWithOutCommit(SQL_GET_BY_COMPANY_ID + company.getId());
-    }
-
-    @Override
-    public Collection<Project> getByCustomer(Customer customer) throws SQLException {
-        return getAllWithOutCommit(SQL_GET_BY_CUSTOMER_ID + customer.getId());
-    }
-
-    @Override
     protected Project readFromResultSet(ResultSet rs) throws SQLException {
         int id = rs.getInt("project_id");
         String name = rs.getString("project_name");
@@ -107,13 +101,13 @@ public class MySqlProjectDaoImpl extends DbAbstractDao<Project, Integer> impleme
 
     @Override
     protected void enrichWithLinks(Project project) throws SQLException {
-        project.setDevelopers(new MySqlDeveloperDaoImpl().getByProject(project));
+        project.setDevelopers(new JdbcDeveloperDaoImpl().getByProject(project));
     }
 
     @Override
     protected void saveLinksInDb(Integer id, Project project) throws SQLException {
         Collection developersIds = project.getDevelopers().stream()
-                .map(Developer::getId)
+                .map((developer) -> developer.getId())
                 .collect(Collectors.toSet());
         saveLinksInDb(id, developersIds, SQL_SAVE_LINKS_DEVELOPERS);
     }

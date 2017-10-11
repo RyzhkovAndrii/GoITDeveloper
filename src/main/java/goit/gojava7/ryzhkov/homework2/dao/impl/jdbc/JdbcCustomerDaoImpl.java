@@ -1,7 +1,6 @@
-package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
+package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
-import goit.gojava7.ryzhkov.homework2.dao.CustomerDao;
-import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.CustomerDao;
 import goit.gojava7.ryzhkov.homework2.model.Customer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 
@@ -11,13 +10,12 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlCustomerDaoImpl extends DbAbstractDao<Customer, Integer> implements CustomerDao {
+public class JdbcCustomerDaoImpl extends JdbcAbstractDao<Customer, Integer> implements CustomerDao {
 
     private static final String SQL_SAVE = "INSERT INTO customers(customer_name) VALUES (?)";
     private static final String SQL_UPDATE = "UPDATE customers SET customer_name = ? WHERE customer_id = ?";
     private static final String SQL_GET_ALL = "SELECT * FROM customers";
     private static final String SQL_GET_BY_ID = "SELECT * FROM customers WHERE customer_id = ?";
-    private static final String SQL_GET_BY_ID_RANGE = "SELECT * FROM customers WHERE customer_id IN ";
     private static final String SQL_REMOVE_BY_ID = "DELETE FROM customers WHERE customer_id = ?";
     private static final String SQL_SAVE_LINKS_PROJECTS =
             "INSERT INTO customers_projects(customer_id, project_id) VALUES (?, ?)";
@@ -34,11 +32,6 @@ public class MySqlCustomerDaoImpl extends DbAbstractDao<Customer, Integer> imple
     @Override
     public Customer getById(Integer id) throws SQLException {
         return getById(id, SQL_GET_BY_ID);
-    }
-
-    @Override
-    public Collection<Customer> getByIdRange(Collection<Integer> idRange) throws SQLException {
-        return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
     @Override
@@ -81,7 +74,7 @@ public class MySqlCustomerDaoImpl extends DbAbstractDao<Customer, Integer> imple
 
     @Override
     protected void enrichWithLinks(Customer customer) throws SQLException {
-        customer.setProjects(new MySqlProjectDaoImpl().getByCustomer(customer));
+        customer.setProjects(new JdbcProjectDaoImpl().getByCustomer(customer));
     }
 
     @Override

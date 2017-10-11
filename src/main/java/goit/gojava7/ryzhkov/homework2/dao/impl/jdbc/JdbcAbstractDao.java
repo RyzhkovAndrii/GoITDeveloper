@@ -1,6 +1,6 @@
-package goit.gojava7.ryzhkov.homework2.dao.impl;
+package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
-import goit.gojava7.ryzhkov.homework2.dao.factories.connection.ConnectionUtils;
+import goit.gojava7.ryzhkov.homework2.dao.ConnectionUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,11 +8,14 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-public abstract class DbAbstractDao<T, ID> {
+import static goit.gojava7.ryzhkov.homework2.dao.ConnectionUtils.ConnectionFactoryType.SIMPLE;
+
+public abstract class JdbcAbstractDao<T, ID> {
 
     private Connection connection;
 
-    protected DbAbstractDao() {
+    protected JdbcAbstractDao() {
+        ConnectionUtils.setConnectionFactoryType(SIMPLE); // todo change place
         connection = ConnectionUtils.getConnection();
     }
 

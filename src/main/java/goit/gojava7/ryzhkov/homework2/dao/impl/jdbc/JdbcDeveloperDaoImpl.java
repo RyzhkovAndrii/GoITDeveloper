@@ -1,7 +1,6 @@
-package goit.gojava7.ryzhkov.homework2.dao.impl.mysql;
+package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
-import goit.gojava7.ryzhkov.homework2.dao.DeveloperDao;
-import goit.gojava7.ryzhkov.homework2.dao.impl.DbAbstractDao;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.DeveloperDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
@@ -12,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class MySqlDeveloperDaoImpl extends DbAbstractDao<Developer, Integer> implements DeveloperDao {
+public class JdbcDeveloperDaoImpl extends JdbcAbstractDao<Developer, Integer> implements DeveloperDao {
 
     private static final String SQL_SAVE =
             "INSERT INTO developers(developer_first_name, developer_last_name, developer_salary) " +
@@ -34,7 +33,11 @@ public class MySqlDeveloperDaoImpl extends DbAbstractDao<Developer, Integer> imp
             "SELECT COUNT(developer_id) FROM developers_skills WHERE developer_id = ?";
     private static final String SQL_DELETE_LINKS_SKILLS = "DELETE FROM developers_skills WHERE developer_id = ?";
 
-    public MySqlDeveloperDaoImpl() {
+    public JdbcDeveloperDaoImpl() {
+    }
+
+    Collection<Developer> getByProject(Project project) throws SQLException {
+        return getAllWithOutCommit(SQL_GET_BY_PROJECT_ID + project.getId());
     }
 
     @Override
@@ -68,11 +71,6 @@ public class MySqlDeveloperDaoImpl extends DbAbstractDao<Developer, Integer> imp
     }
 
     @Override
-    public Collection<Developer> getByProject(Project project) throws SQLException {
-        return getAllWithOutCommit(SQL_GET_BY_PROJECT_ID + project.getId());
-    }
-
-    @Override
     protected Developer readFromResultSet(ResultSet rs) throws SQLException {
         int id = rs.getInt("developer_id");
         String firstName = rs.getString("developer_first_name");
@@ -101,7 +99,7 @@ public class MySqlDeveloperDaoImpl extends DbAbstractDao<Developer, Integer> imp
 
     @Override
     protected void enrichWithLinks(Developer developer) throws SQLException {
-        developer.setSkills(new MySqlSkillDaoImpl().getByDeveloper(developer));
+        developer.setSkills(new JdbcSkillDaoImpl().getByDeveloper(developer));
     }
 
     @Override
