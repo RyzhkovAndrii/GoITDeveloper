@@ -22,7 +22,7 @@ public class CompanyViewConsoleImpl implements View {
         String name = ConsoleUtils.readString("Insert name of company:");
         ConsoleUtils.writeString("Please insert company's project's id  (input format: id1, id2, ...): ");
         Collection<Integer> projectId = ConsoleUtils.readIntCollection();
-        Collection<Project> projects = new ProjectControllerImpl().getByCollectionId(projectId);
+        Collection<Project> projects = new ProjectControllerImpl().getByIdRange(projectId);
         company.setName(name);
         company.setProjects(projects);
     }

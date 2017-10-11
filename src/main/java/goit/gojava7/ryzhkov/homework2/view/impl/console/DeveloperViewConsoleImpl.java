@@ -24,7 +24,7 @@ public class DeveloperViewConsoleImpl implements View {
         double salary = ConsoleUtils.readDouble("Insert developer's salary");
         ConsoleUtils.writeString("Please insert developer's skills id (input format: id1, id2, ...): ");
         Collection<Integer> skillsId = ConsoleUtils.readIntCollection();
-        Collection<Skill> skills = new SkillControllerImpl().getByCollectionId(skillsId);
+        Collection<Skill> skills = new SkillControllerImpl().getByIdRange(skillsId);
         developer.setFirstName(firstName);
         developer.setLastName(lastName);
         developer.setSalary(salary);

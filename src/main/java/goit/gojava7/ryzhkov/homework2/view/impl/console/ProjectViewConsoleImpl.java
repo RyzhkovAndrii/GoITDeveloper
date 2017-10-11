@@ -23,7 +23,7 @@ public class ProjectViewConsoleImpl implements View {
         double cost = ConsoleUtils.readDouble("Insert cost of project:");
         ConsoleUtils.writeString("Please insert project's developers id  (input format: id1, id2, ...): ");
         Collection<Integer> developerId = ConsoleUtils.readIntCollection();
-        Collection<Developer> developers = new DeveloperControllerImpl().getByCollectionId(developerId);
+        Collection<Developer> developers = new DeveloperControllerImpl().getByIdRange(developerId);
         project.setName(name);
         project.setCost(cost);
         project.setDevelopers(developers);

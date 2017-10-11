@@ -9,8 +9,6 @@ public interface GenericController<T, ID> {
 
     T getById(ID id) throws SQLException;
 
-    Collection<T> getByCollectionId(Collection<ID> idCollection) throws SQLException;
-
     Collection<T> getAll() throws SQLException;
 
     void update(T entity) throws SQLException;

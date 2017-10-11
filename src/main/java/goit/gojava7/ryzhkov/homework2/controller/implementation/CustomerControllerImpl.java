@@ -1,9 +1,9 @@
 package goit.gojava7.ryzhkov.homework2.controller.implementation;
 
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.CustomerController;
-import goit.gojava7.ryzhkov.homework2.dao.CustomerDao;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.CustomerDao;
 import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactory;
-import goit.gojava7.ryzhkov.homework2.dao.factories.dao.MySqlDaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.JdbcDaoFactory;
 import goit.gojava7.ryzhkov.homework2.model.Customer;
 
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class CustomerControllerImpl implements CustomerController {
 
-    private DaoFactory daoFactory = new MySqlDaoFactory();
+    private DaoFactory daoFactory = new JdbcDaoFactory();
     private CustomerDao customerDao = daoFactory.getCustomerDao();
 
     @Override
@@ -22,11 +22,6 @@ public class CustomerControllerImpl implements CustomerController {
     @Override
     public Customer getById(Integer id) throws SQLException {
         return customerDao.getById(id);
-    }
-
-    @Override
-    public Collection<Customer> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
-        return customerDao.getByIdRange(idCollection);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package goit.gojava7.ryzhkov.homework2.controller.implementation;
 
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.DeveloperController;
-import goit.gojava7.ryzhkov.homework2.dao.DeveloperDao;
 import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactory;
-import goit.gojava7.ryzhkov.homework2.dao.factories.dao.MySqlDaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.HibernateDaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.DeveloperDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 
 import java.sql.SQLException;
@@ -11,7 +11,8 @@ import java.util.Collection;
 
 public class DeveloperControllerImpl implements DeveloperController {
 
-    private DaoFactory daoFactory = new MySqlDaoFactory();
+//    private DaoFactory daoFactory = new JdbcDaoFactory(); //todo
+    private DaoFactory daoFactory = new HibernateDaoFactory();
     private DeveloperDao developerDao = daoFactory.getDeveloperDao();
 
     @Override
@@ -25,7 +26,7 @@ public class DeveloperControllerImpl implements DeveloperController {
     }
 
     @Override
-    public Collection<Developer> getByCollectionId(Collection<Integer> idCollection) throws SQLException {
+    public Collection<Developer> getByIdRange(Collection<Integer> idCollection) throws SQLException {
         return developerDao.getByIdRange(idCollection);
     }
 
