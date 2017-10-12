@@ -1,9 +1,9 @@
 package goit.gojava7.ryzhkov.homework2.controller.implementation;
 
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.CompanyController;
-import goit.gojava7.ryzhkov.homework2.dao.interfaces.CompanyDao;
 import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactory;
-import goit.gojava7.ryzhkov.homework2.dao.factories.dao.JdbcDaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.HibernateDaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.CompanyDao;
 import goit.gojava7.ryzhkov.homework2.model.Company;
 
 import java.sql.SQLException;
@@ -11,7 +11,8 @@ import java.util.Collection;
 
 public class CompanyControllerImpl implements CompanyController {
 
-    private DaoFactory daoFactory = new JdbcDaoFactory();
+//    private DaoFactory daoFactory = new JdbcDaoFactory();
+    private DaoFactory daoFactory = new HibernateDaoFactory();
     private CompanyDao companyDao = daoFactory.getCompanyDao();
 
     @Override
