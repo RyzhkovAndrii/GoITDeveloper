@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS `customers`;
 
 CREATE TABLE `skills` (
   `skill_id` int(11) NOT NULL AUTO_INCREMENT,
-  `skill_name` varchar(10) NOT NULL,
+  `skill_name` varchar(50) NOT NULL,
   PRIMARY KEY (`skill_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -28,8 +28,8 @@ CREATE TABLE `skills` (
 
 CREATE TABLE `developers` (
   `developer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `developer_first_name` varchar(45) NOT NULL,
-  `developer_last_name` varchar(45) NOT NULL,
+  `developer_first_name` varchar(50) NOT NULL,
+  `developer_last_name` varchar(50) NOT NULL,
   PRIMARY KEY (`developer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -39,7 +39,7 @@ CREATE TABLE `developers` (
 
 CREATE TABLE `projects` (
   `project_id` int(11) NOT NULL AUTO_INCREMENT,
-  `project_name` varchar(45) NOT NULL,
+  `project_name` varchar(50) NOT NULL,
   PRIMARY KEY (`project_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -49,7 +49,7 @@ CREATE TABLE `projects` (
 
 CREATE TABLE `companies` (
   `company_id` int(11) NOT NULL AUTO_INCREMENT,
-  `company_name` varchar(45) NOT NULL,
+  `company_name` varchar(50) NOT NULL,
   PRIMARY KEY (`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -59,7 +59,7 @@ CREATE TABLE `companies` (
 
 CREATE TABLE `customers` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_name` varchar(45) NOT NULL,
+  `customer_name` varchar(50) NOT NULL,
   PRIMARY KEY (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
