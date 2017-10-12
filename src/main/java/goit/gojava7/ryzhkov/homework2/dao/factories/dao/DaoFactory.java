@@ -1,6 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.factories.dao;
 
-import goit.gojava7.ryzhkov.homework2.dao.*;
+import goit.gojava7.ryzhkov.homework2.dao.interfaces.*;
 
 public interface DaoFactory {
 
