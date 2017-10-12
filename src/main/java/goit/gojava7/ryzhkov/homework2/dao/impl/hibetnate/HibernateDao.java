@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 
 public abstract class HibernateDao<T, ID extends Serializable> {
 
-    private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory(); //todo remove
+    private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory(); //todo remove
     private Session currentSession;
     private Transaction currentTransaction;
 
