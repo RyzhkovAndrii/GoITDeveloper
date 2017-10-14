@@ -2,10 +2,9 @@ package goit.gojava7.ryzhkov.homework2.view.impl.console;
 
 import goit.gojava7.ryzhkov.homework2.controller.implementation.SkillControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.SkillController;
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
 import goit.gojava7.ryzhkov.homework2.view.View;
-
-import java.sql.SQLException;
 
 public class SkillViewConsoleImpl implements View {
 
@@ -22,7 +21,7 @@ public class SkillViewConsoleImpl implements View {
         try {
             int id = skillController.save(skill);
             ConsoleUtils.writeString("OK! Skill was created. ID = " + id + ".");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -32,7 +31,7 @@ public class SkillViewConsoleImpl implements View {
         int id = ConsoleUtils.readInt("Insert skill id:");
         try {
             ConsoleUtils.writeString(skillController.getById(id).toString());
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -44,7 +43,7 @@ public class SkillViewConsoleImpl implements View {
                     .stream()
                     .map(String::valueOf)
                     .forEach(ConsoleUtils::writeString);
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -58,7 +57,7 @@ public class SkillViewConsoleImpl implements View {
             skill.setName(name);
             skillController.update(skill);
             ConsoleUtils.writeString("OK! Skill was updated.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -70,7 +69,7 @@ public class SkillViewConsoleImpl implements View {
             Skill skill = skillController.getById(id);
             skillController.remove(skill);
             ConsoleUtils.writeString("OK! Skill was deleted.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }

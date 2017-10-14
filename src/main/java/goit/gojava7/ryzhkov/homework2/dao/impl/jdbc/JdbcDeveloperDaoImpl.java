@@ -1,5 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.dao.interfaces.DeveloperDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
@@ -41,32 +42,32 @@ public class JdbcDeveloperDaoImpl extends JdbcAbstractDao<Developer, Integer> im
     }
 
     @Override
-    public Integer save(Developer developer) throws SQLException {
+    public Integer save(Developer developer) throws StorageException {
         return save(developer, SQL_SAVE);
     }
 
     @Override
-    public Developer getById(Integer id) throws SQLException {
+    public Developer getById(Integer id) throws StorageException {
         return getById(id, SQL_GET_BY_ID);
     }
 
     @Override
-    public Collection<Developer> getByIdRange(Collection<Integer> idRange) throws SQLException {
+    public Collection<Developer> getByIdRange(Collection<Integer> idRange) throws StorageException {
         return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
     @Override
-    public Collection<Developer> getAll() throws SQLException {
+    public Collection<Developer> getAll() throws StorageException {
         return getAll(SQL_GET_ALL);
     }
 
     @Override
-    public void update(Developer developer) throws SQLException {
+    public void update(Developer developer) throws StorageException {
         update(developer.getId(), developer, SQL_UPDATE);
     }
 
     @Override
-    public void remove(Developer developer) throws SQLException {
+    public void remove(Developer developer) throws StorageException {
         removeById(developer.getId(), SQL_REMOVE_BY_ID);
     }
 

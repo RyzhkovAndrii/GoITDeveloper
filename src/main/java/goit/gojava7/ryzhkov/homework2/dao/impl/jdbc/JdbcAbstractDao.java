@@ -1,6 +1,7 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
 import goit.gojava7.ryzhkov.homework2.dao.ConnectionUtils;
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,34 +9,32 @@ import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
-import static goit.gojava7.ryzhkov.homework2.dao.ConnectionUtils.ConnectionFactoryType.SIMPLE;
-
 public abstract class JdbcAbstractDao<T, ID> {
 
     private Connection connection;
 
     protected JdbcAbstractDao() {
-        ConnectionUtils.setConnectionFactoryType(SIMPLE); // todo change place
         connection = ConnectionUtils.getConnection();
     }
 
-    private <V> V doInTransaction(Callable<V> actions) throws SQLException {
-        boolean oldAutoCommitState = connection.getAutoCommit();
-        connection.setAutoCommit(false);
-        connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE); // todo make level choice
+    private <V> V doInTransaction(Callable<V> actions) throws StorageException {
         try {
+            connection.setAutoCommit(false);
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE); // todo make level choice
             V result = actions.call();
             connection.commit();
             return result;
         } catch (Exception e) {
-            connection.rollback();
-            throw new SQLException(e);
-        } finally {
-            connection.setAutoCommit(oldAutoCommitState);
+            try {
+                connection.rollback();
+            } catch (SQLException ignored) {
+                throw new StorageException("Can't rollback transaction.", e);
+            }
+            throw new StorageException(e);
         }
     }
 
-    protected T getById(ID id, String sql) throws SQLException {
+    protected T getById(ID id, String sql) throws StorageException {
         return doInTransaction(() -> {
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 T entity;
@@ -54,14 +53,14 @@ public abstract class JdbcAbstractDao<T, ID> {
         });
     }
 
-    protected Collection<T> getByIdRange(Collection<ID> idRange, String sql) throws SQLException {
+    protected Collection<T> getByIdRange(Collection<ID> idRange, String sql) throws StorageException {
         String idRangeSql = idRange.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",","(",")"));
         return getAll(sql + idRangeSql);
     }
 
-    protected Collection<T> getAll(String sql) throws SQLException {
+    protected Collection<T> getAll(String sql) throws StorageException {
         return doInTransaction(() -> getAllWithOutCommit(sql));
     }
 
@@ -81,7 +80,7 @@ public abstract class JdbcAbstractDao<T, ID> {
         }
     }
 
-    protected void removeById(ID id, String sql) throws SQLException {
+    protected void removeById(ID id, String sql) throws StorageException {
         doInTransaction(() -> {
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setObject(1, id);
@@ -95,7 +94,7 @@ public abstract class JdbcAbstractDao<T, ID> {
         });
     }
 
-    protected ID save(T entity, String sql) throws SQLException {
+    protected ID save(T entity, String sql) throws StorageException {
         return doInTransaction(() -> {
             try (PreparedStatement pstmt =
                          connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -116,7 +115,7 @@ public abstract class JdbcAbstractDao<T, ID> {
         });
     }
 
-    protected void update(ID id, T entity, String sql) throws SQLException {
+    protected void update(ID id, T entity, String sql) throws StorageException {
         doInTransaction(() -> {
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 prepareToUpdate(entity, pstmt);
@@ -169,7 +168,7 @@ public abstract class JdbcAbstractDao<T, ID> {
 
     protected abstract void prepareToUpdate(T entity, PreparedStatement pstmt) throws SQLException;
 
-    protected abstract ID readIdFromKeyResultSet(ResultSet rs) throws SQLException; // todo transfer to abstract method
+    protected abstract ID readIdFromKeyResultSet(ResultSet rs) throws SQLException;
 
     protected abstract void enrichWithLinks(T entity) throws SQLException;
 

@@ -3,11 +3,11 @@ package goit.gojava7.ryzhkov.homework2.view.impl.console;
 import goit.gojava7.ryzhkov.homework2.controller.implementation.DeveloperControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.implementation.ProjectControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.ProjectController;
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 import goit.gojava7.ryzhkov.homework2.view.View;
 
-import java.sql.SQLException;
 import java.util.Collection;
 
 public class ProjectViewConsoleImpl implements View {
@@ -18,7 +18,7 @@ public class ProjectViewConsoleImpl implements View {
         projectController = new ProjectControllerImpl();
     }
 
-    private void fillProjectsFields(Project project) throws SQLException {
+    private void fillProjectsFields(Project project) throws StorageException {
         String name = ConsoleUtils.readString("Insert name of project:");
         double cost = ConsoleUtils.readDouble("Insert cost of project:");
         ConsoleUtils.writeString("Please insert project's developers id  (input format: id1, id2, ...): ");
@@ -36,7 +36,7 @@ public class ProjectViewConsoleImpl implements View {
             fillProjectsFields(project);
             int id = projectController.save(project);
             ConsoleUtils.writeString("OK! Project was created. ID = " + id + ".");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -46,7 +46,7 @@ public class ProjectViewConsoleImpl implements View {
         int id = ConsoleUtils.readInt("Insert project id:");
         try {
             ConsoleUtils.writeString(projectController.getById(id).toString());
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -58,7 +58,7 @@ public class ProjectViewConsoleImpl implements View {
                     .stream()
                     .map(String::valueOf)
                     .forEach(ConsoleUtils::writeString);
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -71,7 +71,7 @@ public class ProjectViewConsoleImpl implements View {
             fillProjectsFields(project);
             projectController.update(project);
             ConsoleUtils.writeString("OK! Project was updated.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -83,7 +83,7 @@ public class ProjectViewConsoleImpl implements View {
             Project project = projectController.getById(id);
             projectController.remove(project);
             ConsoleUtils.writeString("OK! Project was deleted.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }

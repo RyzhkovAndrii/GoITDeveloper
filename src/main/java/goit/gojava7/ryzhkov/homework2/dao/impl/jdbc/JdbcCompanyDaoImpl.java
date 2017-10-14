@@ -1,5 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.dao.interfaces.CompanyDao;
 import goit.gojava7.ryzhkov.homework2.model.Company;
 import goit.gojava7.ryzhkov.homework2.model.Project;
@@ -25,27 +26,27 @@ public class JdbcCompanyDaoImpl extends JdbcAbstractDao<Company, Integer> implem
             "DELETE FROM companies_projects WHERE company_id = ?";
 
     @Override
-    public Integer save(Company company) throws SQLException {
+    public Integer save(Company company) throws StorageException {
         return save(company, SQL_SAVE);
     }
 
     @Override
-    public Company getById(Integer id) throws SQLException {
+    public Company getById(Integer id) throws StorageException {
         return getById(id, SQL_GET_BY_ID);
     }
 
     @Override
-    public Collection<Company> getAll() throws SQLException {
+    public Collection<Company> getAll() throws StorageException {
         return getAll(SQL_GET_ALL);
     }
 
     @Override
-    public void update(Company company) throws SQLException {
+    public void update(Company company) throws StorageException {
         update(company.getId(), company, SQL_UPDATE);
     }
 
     @Override
-    public void remove(Company company) throws SQLException {
+    public void remove(Company company) throws StorageException {
         removeById(company.getId(), SQL_REMOVE_BY_ID);
     }
 

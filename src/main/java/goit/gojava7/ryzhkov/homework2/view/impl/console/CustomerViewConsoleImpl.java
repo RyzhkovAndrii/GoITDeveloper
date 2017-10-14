@@ -3,11 +3,11 @@ package goit.gojava7.ryzhkov.homework2.view.impl.console;
 import goit.gojava7.ryzhkov.homework2.controller.implementation.CustomerControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.implementation.ProjectControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.CustomerController;
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.model.Customer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
 import goit.gojava7.ryzhkov.homework2.view.View;
 
-import java.sql.SQLException;
 import java.util.Collection;
 
 public class CustomerViewConsoleImpl implements View {
@@ -18,7 +18,7 @@ public class CustomerViewConsoleImpl implements View {
         customerController = new CustomerControllerImpl();
     }
 
-    private void fillCustomerFields(Customer customer) throws SQLException {
+    private void fillCustomerFields(Customer customer) throws StorageException {
         String name = ConsoleUtils.readString("Insert name of customer:");
         ConsoleUtils.writeString("Please insert customer's project's id  (input format: id1, id2, ...): ");
         Collection<Integer> projectId = ConsoleUtils.readIntCollection();
@@ -34,7 +34,7 @@ public class CustomerViewConsoleImpl implements View {
             fillCustomerFields(customer);
             int id = customerController.save(customer);
             ConsoleUtils.writeString("OK! Customer was created. ID = " + id + ".");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -44,7 +44,7 @@ public class CustomerViewConsoleImpl implements View {
         int id = ConsoleUtils.readInt("Insert customer id:");
         try {
             ConsoleUtils.writeString(customerController.getById(id).toString());
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -56,7 +56,7 @@ public class CustomerViewConsoleImpl implements View {
                     .stream()
                     .map(String::valueOf)
                     .forEach(ConsoleUtils::writeString);
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -69,7 +69,7 @@ public class CustomerViewConsoleImpl implements View {
             fillCustomerFields(customer);
             customerController.update(customer);
             ConsoleUtils.writeString("OK! Customer was updated.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -81,7 +81,7 @@ public class CustomerViewConsoleImpl implements View {
             Customer customer = customerController.getById(id);
             customerController.remove(customer);
             ConsoleUtils.writeString("OK! Customer was deleted.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }

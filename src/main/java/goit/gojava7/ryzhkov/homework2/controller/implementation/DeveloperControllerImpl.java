@@ -1,12 +1,12 @@
 package goit.gojava7.ryzhkov.homework2.controller.implementation;
 
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.DeveloperController;
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactory;
 import goit.gojava7.ryzhkov.homework2.dao.factories.dao.HibernateDaoFactory;
 import goit.gojava7.ryzhkov.homework2.dao.interfaces.DeveloperDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 
-import java.sql.SQLException;
 import java.util.Collection;
 
 public class DeveloperControllerImpl implements DeveloperController {
@@ -16,32 +16,32 @@ public class DeveloperControllerImpl implements DeveloperController {
     private DeveloperDao developerDao = daoFactory.getDeveloperDao();
 
     @Override
-    public Integer save(Developer developer) throws SQLException {
+    public Integer save(Developer developer) throws StorageException {
         return developerDao.save(developer);
     }
 
     @Override
-    public Developer getById(Integer id) throws SQLException {
+    public Developer getById(Integer id) throws StorageException {
         return developerDao.getById(id);
     }
 
     @Override
-    public Collection<Developer> getByIdRange(Collection<Integer> idCollection) throws SQLException {
+    public Collection<Developer> getByIdRange(Collection<Integer> idCollection) throws StorageException {
         return developerDao.getByIdRange(idCollection);
     }
 
     @Override
-    public Collection<Developer> getAll() throws SQLException {
+    public Collection<Developer> getAll() throws StorageException {
         return developerDao.getAll();
     }
 
     @Override
-    public void update(Developer developer) throws SQLException {
+    public void update(Developer developer) throws StorageException {
         developerDao.update(developer);
     }
 
     @Override
-    public void remove(Developer developer) throws SQLException {
+    public void remove(Developer developer) throws StorageException {
         developerDao.remove(developer);
     }
 

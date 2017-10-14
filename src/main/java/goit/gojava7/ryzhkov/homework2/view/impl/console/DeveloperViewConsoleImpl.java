@@ -3,11 +3,11 @@ package goit.gojava7.ryzhkov.homework2.view.impl.console;
 import goit.gojava7.ryzhkov.homework2.controller.implementation.DeveloperControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.implementation.SkillControllerImpl;
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.DeveloperController;
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
 import goit.gojava7.ryzhkov.homework2.view.View;
 
-import java.sql.SQLException;
 import java.util.Collection;
 
 public class DeveloperViewConsoleImpl implements View {
@@ -18,7 +18,7 @@ public class DeveloperViewConsoleImpl implements View {
         developerController = new DeveloperControllerImpl();
     }
 
-    private void fillDevelopersFields(Developer developer) throws SQLException {
+    private void fillDevelopersFields(Developer developer) throws StorageException {
         String firstName = ConsoleUtils.readString("Insert developer's first name:");
         String lastName = ConsoleUtils.readString("Insert developer's last name:");
         double salary = ConsoleUtils.readDouble("Insert developer's salary");
@@ -38,7 +38,7 @@ public class DeveloperViewConsoleImpl implements View {
             fillDevelopersFields(developer);
             int id = developerController.save(developer);
             ConsoleUtils.writeString("OK! Developer was created. ID = " + id + ".");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -48,7 +48,7 @@ public class DeveloperViewConsoleImpl implements View {
         int id = ConsoleUtils.readInt("Insert developer id:");
         try {
             ConsoleUtils.writeString(developerController.getById(id).toString());
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -60,7 +60,7 @@ public class DeveloperViewConsoleImpl implements View {
                     .stream()
                     .map(String::valueOf)
                     .forEach(ConsoleUtils::writeString);
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -73,7 +73,7 @@ public class DeveloperViewConsoleImpl implements View {
             fillDevelopersFields(developer);
             developerController.update(developer);
             ConsoleUtils.writeString("OK! Developer was updated.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }
@@ -85,7 +85,7 @@ public class DeveloperViewConsoleImpl implements View {
             Developer developer = developerController.getById(id);
             developerController.remove(developer);
             ConsoleUtils.writeString("OK! Developer was deleted.");
-        } catch (SQLException e) {
+        } catch (StorageException e) {
             ConsoleUtils.writeString(e.getMessage());
         }
     }

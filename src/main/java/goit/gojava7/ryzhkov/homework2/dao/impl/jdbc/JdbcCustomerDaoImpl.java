@@ -1,5 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.dao.interfaces.CustomerDao;
 import goit.gojava7.ryzhkov.homework2.model.Customer;
 import goit.gojava7.ryzhkov.homework2.model.Project;
@@ -25,27 +26,27 @@ public class JdbcCustomerDaoImpl extends JdbcAbstractDao<Customer, Integer> impl
             "DELETE FROM customers_projects WHERE customer_id = ?";
 
     @Override
-    public Integer save(Customer customer) throws SQLException {
+    public Integer save(Customer customer) throws StorageException {
         return save(customer, SQL_SAVE);
     }
 
     @Override
-    public Customer getById(Integer id) throws SQLException {
+    public Customer getById(Integer id) throws StorageException {
         return getById(id, SQL_GET_BY_ID);
     }
 
     @Override
-    public Collection<Customer> getAll() throws SQLException {
+    public Collection<Customer> getAll() throws StorageException {
         return getAll(SQL_GET_ALL);
     }
 
     @Override
-    public void update(Customer customer) throws SQLException {
+    public void update(Customer customer) throws StorageException {
         update(customer.getId(), customer, SQL_UPDATE);
     }
 
     @Override
-    public void remove(Customer customer) throws SQLException {
+    public void remove(Customer customer) throws StorageException {
         removeById(customer.getId(), SQL_REMOVE_BY_ID);
     }
 

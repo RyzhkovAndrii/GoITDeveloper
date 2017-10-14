@@ -1,18 +1,18 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.hibetnate;
 
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
 public abstract class HibernateDao<T, ID extends Serializable> {
 
-    private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory(); //todo remove
+    private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory(); //todo remove and close
     private Session currentSession;
     private Transaction currentTransaction;
 
@@ -38,7 +38,7 @@ public abstract class HibernateDao<T, ID extends Serializable> {
         currentSession.close();
     }
 
-    private  <V> V doInSession(Callable<V> actions, String errorMessage) throws SQLException {
+    private  <V> V doInSession(Callable<V> actions, String errorMessage) throws StorageException {
         V result;
         try {
             openSession();
@@ -46,11 +46,11 @@ public abstract class HibernateDao<T, ID extends Serializable> {
             closeSession();
             return result;
         } catch (Exception e) {
-            throw new SQLException(errorMessage); //todo: StorageException
+            throw new StorageException(errorMessage, e);
         }
     }
 
-    private  <V> V doInSessionWithTransaction(Callable<V> actions, String errorMessage) throws SQLException {
+    private  <V> V doInSessionWithTransaction(Callable<V> actions, String errorMessage) throws StorageException {
         V result;
         try {
             openSessionWithTransaction();
@@ -58,7 +58,7 @@ public abstract class HibernateDao<T, ID extends Serializable> {
             closeSessionWithTransaction();
             return result;
         } catch (Exception e) {
-            throw new SQLException(errorMessage); //todo: StorageException
+            throw new StorageException(errorMessage, e);
         }
     }
 
@@ -66,22 +66,22 @@ public abstract class HibernateDao<T, ID extends Serializable> {
         this.clazz = clazz;
     }
 
-    public ID save(T entity) throws SQLException {
+    public ID save(T entity) throws StorageException {
         return (ID) doInSessionWithTransaction(() -> currentSession.save(entity),
                 "Saving failed.");
     }
 
-    public T getById(ID id) throws SQLException {
+    public T getById(ID id) throws StorageException {
         T entity;
         entity = doInSession(() -> currentSession.get(clazz, id),
                 "Getting failed.");
         if (entity == null) {
-            throw new SQLException("Getting failed, no ID found."); //todo: StorageException
+            throw new StorageException("Getting failed, no ID found.");
         }
         return entity;
     }
 
-    protected Collection<T> getByIdRange(Collection<ID> idRange, String idFieldName) throws SQLException {
+    protected Collection<T> getByIdRange(Collection<ID> idRange, String idFieldName) throws StorageException {
         return doInSession(()-> currentSession
                         .createQuery("from " + clazz.getSimpleName()
                                 + " where " + idFieldName + " in :idRange", clazz) //todo refactoring
@@ -90,21 +90,21 @@ public abstract class HibernateDao<T, ID extends Serializable> {
                 "Getting failed.");
     }
 
-    public Collection<T> getAll() throws SQLException {
+    public Collection<T> getAll() throws StorageException {
         return doInSession(() -> currentSession
                 .createQuery("from " + clazz.getSimpleName(), clazz)
                 .getResultList(),
                 "Getting failed.");
     }
 
-    public void update(T entity) throws SQLException {
+    public void update(T entity) throws StorageException {
         doInSessionWithTransaction(() -> {
             currentSession.update(entity);
             return null;
         }, "Updating failed.");
     }
 
-    public void remove(T entity) throws SQLException {
+    public void remove(T entity) throws StorageException {
         doInSessionWithTransaction(() -> {
             currentSession.delete(entity);
             return null;

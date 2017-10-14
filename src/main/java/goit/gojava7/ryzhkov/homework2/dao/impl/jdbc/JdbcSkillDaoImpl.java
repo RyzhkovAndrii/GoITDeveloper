@@ -1,5 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.dao.interfaces.SkillDao;
 import goit.gojava7.ryzhkov.homework2.model.Developer;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
@@ -28,32 +29,32 @@ public class JdbcSkillDaoImpl extends JdbcAbstractDao<Skill, Integer> implements
     }
 
     @Override
-    public Integer save(Skill skill) throws SQLException {
+    public Integer save(Skill skill) throws StorageException {
         return save(skill, SQL_SAVE);
     }
 
     @Override
-    public Skill getById(Integer id) throws SQLException {
+    public Skill getById(Integer id) throws StorageException {
         return getById(id, SQL_GET_BY_ID);
     }
 
     @Override
-    public Collection<Skill> getByIdRange(Collection<Integer> idRange) throws SQLException {
+    public Collection<Skill> getByIdRange(Collection<Integer> idRange) throws StorageException {
         return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
     @Override
-    public Collection<Skill> getAll() throws SQLException {
+    public Collection<Skill> getAll() throws StorageException {
         return getAll(SQL_GET_ALL);
     }
 
     @Override
-    public void update(Skill skill) throws SQLException {
+    public void update(Skill skill) throws StorageException {
         update(skill.getId(), skill, SQL_UPDATE);
     }
 
     @Override
-    public void remove(Skill skill) throws SQLException {
+    public void remove(Skill skill) throws StorageException {
         removeById(skill.getId(), SQL_REMOVE_BY_ID);
     }
 

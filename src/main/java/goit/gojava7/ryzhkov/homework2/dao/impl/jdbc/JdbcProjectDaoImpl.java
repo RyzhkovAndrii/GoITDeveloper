@@ -1,5 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
+import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.dao.interfaces.ProjectDao;
 import goit.gojava7.ryzhkov.homework2.model.*;
 
@@ -45,32 +46,32 @@ public class JdbcProjectDaoImpl extends JdbcAbstractDao<Project, Integer> implem
     }
 
     @Override
-    public Integer save(Project project) throws SQLException {
+    public Integer save(Project project) throws StorageException {
         return save(project, SQL_SAVE);
     }
 
     @Override
-    public Project getById(Integer id) throws SQLException {
+    public Project getById(Integer id) throws StorageException {
         return getById(id, SQL_GET_BY_ID);
     }
 
     @Override
-    public Collection<Project> getByIdRange(Collection<Integer> idRange) throws SQLException {
+    public Collection<Project> getByIdRange(Collection<Integer> idRange) throws StorageException {
         return getByIdRange(idRange, SQL_GET_BY_ID_RANGE);
     }
 
     @Override
-    public Collection<Project> getAll() throws SQLException {
+    public Collection<Project> getAll() throws StorageException {
         return getAll(SQL_GET_ALL);
     }
 
     @Override
-    public void update(Project project) throws SQLException {
+    public void update(Project project) throws StorageException {
         update(project.getId(), project, SQL_UPDATE);
     }
 
     @Override
-    public void remove(Project project) throws SQLException {
+    public void remove(Project project) throws StorageException {
         removeById(project.getId(), SQL_REMOVE_BY_ID);
     }
 
