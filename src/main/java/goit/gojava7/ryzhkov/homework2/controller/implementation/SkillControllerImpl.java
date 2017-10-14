@@ -3,6 +3,7 @@ package goit.gojava7.ryzhkov.homework2.controller.implementation;
 import goit.gojava7.ryzhkov.homework2.controller.interfaces.SkillController;
 import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactory;
+import goit.gojava7.ryzhkov.homework2.dao.factories.dao.DaoFactoryFactory;
 import goit.gojava7.ryzhkov.homework2.dao.factories.dao.HibernateDaoFactory;
 import goit.gojava7.ryzhkov.homework2.dao.interfaces.SkillDao;
 import goit.gojava7.ryzhkov.homework2.model.Skill;
@@ -12,7 +13,8 @@ import java.util.Collection;
 public class SkillControllerImpl implements SkillController {
 
 //    private DaoFactory daoFactory = new JdbcDaoFactory();
-    private DaoFactory daoFactory = new HibernateDaoFactory();
+//    private DaoFactory daoFactory = new HibernateDaoFactory();
+    private DaoFactory daoFactory = DaoFactoryFactory.getDaoFactory();
     private SkillDao skillDao = daoFactory.getSkillDao();
 
     @Override
