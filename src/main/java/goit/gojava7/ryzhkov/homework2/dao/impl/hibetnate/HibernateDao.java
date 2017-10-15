@@ -1,10 +1,10 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.hibetnate;
 
+import goit.gojava7.ryzhkov.homework2.dao.StorageUtils;
 import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 
 public abstract class HibernateDao<T, ID extends Serializable> {
 
-    private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory(); //todo remove and close
+    private static SessionFactory sessionFactory = StorageUtils.getSessionFactory();
     private Session currentSession;
     private Transaction currentTransaction;
 

@@ -1,6 +1,6 @@
 package goit.gojava7.ryzhkov.homework2.dao.impl.jdbc;
 
-import goit.gojava7.ryzhkov.homework2.dao.ConnectionUtils;
+import goit.gojava7.ryzhkov.homework2.dao.StorageUtils;
 import goit.gojava7.ryzhkov.homework2.dao.StorageException;
 
 import java.sql.*;
@@ -14,7 +14,7 @@ public abstract class JdbcAbstractDao<T, ID> {
     private Connection connection;
 
     protected JdbcAbstractDao() {
-        connection = ConnectionUtils.getConnection();
+        connection = StorageUtils.getJdbcConnection();
     }
 
     private <V> V doInTransaction(Callable<V> actions) throws StorageException {
