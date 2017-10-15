@@ -79,7 +79,7 @@ public class ConsoleUtils {
         }
     }
 
-    public static void showActionChooseMenu() { //TODO move out
+    public static void showActionChooseMenu() {
         ConsoleUtils.writeString(
                 "\n====== Choose action =====" +
                         "\n1 - get by id;" +
@@ -92,7 +92,7 @@ public class ConsoleUtils {
                         "\nPlease, make your choice: ");
     }
 
-    public static void showEntityChooseMenu() {  //TODO move out
+    public static void showEntityChooseMenu() {
         ConsoleUtils.writeString(
                 "\n====== Choose entity =====" +
                         "\n1 - skill;" +

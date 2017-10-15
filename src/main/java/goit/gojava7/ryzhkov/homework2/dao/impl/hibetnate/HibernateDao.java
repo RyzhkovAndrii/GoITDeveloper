@@ -84,7 +84,7 @@ public abstract class HibernateDao<T, ID extends Serializable> {
     protected Collection<T> getByIdRange(Collection<ID> idRange, String idFieldName) throws StorageException {
         return doInSession(()-> currentSession
                         .createQuery("from " + clazz.getSimpleName()
-                                + " where " + idFieldName + " in :idRange", clazz) //todo refactoring
+                                + " where " + idFieldName + " in :idRange", clazz)
                         .setParameter("idRange", idRange)
                         .getResultList(),
                 "Getting failed.");

@@ -95,7 +95,7 @@ public class JdbcDeveloperDaoImpl extends JdbcAbstractDao<Developer, Integer> im
 
     @Override
     protected Integer readIdFromKeyResultSet(ResultSet rs) throws SQLException {
-        return rs.getInt(1); // todo transfer to abstract method
+        return rs.getInt(1);
     }
 
     @Override
